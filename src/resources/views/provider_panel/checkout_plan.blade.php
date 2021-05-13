@@ -29,5 +29,5 @@
 @section('javascripts')
 <script src="/libs/signature/lang.trans/user_provider_web"> </script> 
 <script src="/plugins/card/card.js"></script>
-<script src="{{ elixir('vendor/codificar/laravel-signature/signature.vue.js') }}"> </script> 
+<script src="{{ elixir('vendor/codificar/laravel-subscription-plan/subscriptionPlan.vue.js') }}"> </script> 
 @stop

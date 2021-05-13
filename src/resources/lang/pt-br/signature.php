@@ -6,7 +6,8 @@ return array(
     'email_cancelation'                 =>  'Sua assinatura foi cancelada.',
     'signature'                         =>  'Assinatura',
     'plural'                            =>  'Assinaturas',
-    
+    'signature_active_confirm'          =>  'Alterar situação da assinatura?',
+
     'expiration_date'                   =>  'Vencimento',
     'id'                                =>  'Id',
     'name'                              =>  'Nome',

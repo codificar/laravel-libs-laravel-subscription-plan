@@ -65,7 +65,7 @@ export default {
          * Seleciona um cartão como padrão
          */
        setDefaultCard(cardId, index) {
-            axios.post('/api/v3/defaultCard', {
+            axios.post('/api/defaultCard', {
                 provider: true,
                 userId: this.providerid,
                 cardId: cardId
@@ -106,7 +106,7 @@ export default {
                 confirmButtonText: this.trans("user_provider_web.yes")
             }).then((result) => {
                 if (result.value) {
-                    axios.post('/api/v3/removeCard', {
+                    axios.post('/api/removeCard', {
                         provider: true,
                         userId: this.providerid,
                         cardId: cardId

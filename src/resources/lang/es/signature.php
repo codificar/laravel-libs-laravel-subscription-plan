@@ -6,6 +6,7 @@ return array(
     'email_cancelation'                 =>  'Su suscripción ha sido cancelada.',
     'signature'                         =>  'Suscripción',
     'plural'                            =>  'Suscripciónes',
+    'signature_active_confirm'          =>  'Cambiar situación',
 
     'expiration_date'                   =>  'Fecha de vencimiento',
     'id'                                =>  'Id',

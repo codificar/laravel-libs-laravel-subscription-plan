@@ -65,7 +65,7 @@ export default {
          */
         addNewCard() {
             this.onLoad = true
-            axios.post('/api/v3/addCard', {
+            axios.post('/api/addCard', {
                 provider: true,
                 number: this.card_number,
                 name: this.card_holder,

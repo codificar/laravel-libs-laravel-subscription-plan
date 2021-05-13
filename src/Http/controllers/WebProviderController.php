@@ -19,7 +19,7 @@ class WebProviderController extends Controller {
 		$actualSignature = $provider->signature_id;
 		
 		if ( $actualSignature ) {
-			$signature = subscriptionPlan::find($actualSignature);
+			$signature = Signature::find($actualSignature);
 			$now = strtotime(date('Y-m-d'));
 			$signatureNextExpiration = strtotime($signature->next_expiration);
 

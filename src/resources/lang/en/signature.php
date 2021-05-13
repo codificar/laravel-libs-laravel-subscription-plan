@@ -6,6 +6,7 @@ return array(
     'email_cancelation'                 =>  'You Signature has been canceled',
     'signature'                         =>  'Signature',
     'plural'                            =>  'Signatures',
+    'signature_active_confirm'          =>  'Change situation',
 
     'expiration_date'                   =>  'Due Date',
     'id'                                =>  'Id',
