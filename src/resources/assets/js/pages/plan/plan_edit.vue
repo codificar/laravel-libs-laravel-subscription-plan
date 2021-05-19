@@ -1,7 +1,7 @@
 <script>
 import axios from "axios";
 import VuePassword from 'vue-password';
-import { required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators';
+import { required } from 'vuelidate/lib/validators';
 
 export default {
     props: ["redirect", "edit", "crsf_token", "Plan", 'Locations'],

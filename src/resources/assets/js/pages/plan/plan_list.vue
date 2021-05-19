@@ -185,7 +185,7 @@
                             class="dropdown-item"
                             tabindex="-1"
                             :href="'/admin/plan/' + plan.id"
-                          >{{ trans('plan.edit') }}</a>
+                          >{{ trans('plan.plan_edit') }}</a>
 
                           <!-- DELETAR -->
                           <button

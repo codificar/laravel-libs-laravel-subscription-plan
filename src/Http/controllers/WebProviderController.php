@@ -13,8 +13,14 @@ class WebProviderController extends Controller {
 	* Get all plans for providers and auth provider data
 	*/
 	public function listPlans() {
-		$plans = Plan::where('client', 'Provider')->where('visibility', 1)->get();
 		$provider = Provider::find(\Auth::guard("providers")->user()->id);
+		$plans = Plan::where('client', 'Provider')
+			->where('visibility', 1)
+			->where(function ($que) use ($provider) {
+                $que->where('location',  $provider->location_id )
+                    ->orWhere('location', null);
+            })
+			->get();
 		$validSignature = [];
 		$actualSignature = $provider->signature_id;
 		
