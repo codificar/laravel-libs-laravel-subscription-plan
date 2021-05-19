@@ -31,8 +31,6 @@ class PlanController extends Controller
         $provider = Provider::find(Auth::guard("providers")->user()->id); 
         $payment = Payment::getPaymentsByProviderId($provider->id);
 
-        \Log::info($payment);
-
         if (!$plan) 
             return redirect('/provider/plans');   
 

@@ -18,6 +18,7 @@ class WebProviderController extends Controller {
 			->where('visibility', 1)
 			->where(function ($que) use ($provider) {
                 $que->where('location',  $provider->location_id )
+					->orWhere('location', 0)
                     ->orWhere('location', null);
             })
 			->get();
