@@ -4,7 +4,7 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
     /**
     * Rotas com Middleware
     */
-    Route::group(['prefix' => 'api/v3/admin','middleware' => ['auth.admin_api', 'cors'],], function(){
+    Route::group(['prefix' => 'api/admin','middleware' => ['auth.admin_api', 'cors'],], function(){
         Route::get('/plan', 'PlanController@index');
         Route::post('/storePlan', 'PlanController@store');
 		Route::get('/plan/add', 'PlanController@add');
@@ -49,7 +49,7 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
      */
     Route::group(['prefix' => 'api/libs/provider' ,'middleware' => 'auth.provider_api:api'], function() {
         /**
-         * @OA\Post(path="/api/v3/provider/update_plan",
+         * @OA\Post(path="/api/provider/update_plan",
          *      tags={"Provider"},
          *      operationId="NewSubscription",
          *      description="Cria uma nova assinatura",
@@ -102,7 +102,7 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
         Route::post('/update_plan', array('uses' => 'SignatureController@newProviderSubscription'));
 
         /**
-         * @OA\Get(path="/api/v3/provider/subscription_details",
+         * @OA\Get(path="/api/provider/subscription_details",
          *      tags={"Provider"},
          *      operationId="SubscriptionDetails",
          *      description="Retorna os detalhes de uma assinatura",
@@ -127,7 +127,7 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
         Route::get('/subscription_details', array('uses' => 'SignatureController@getDetails'));
 
         /**
-         * @OA\Post(path="/api/v3/provider/cancel_subscription",
+         * @OA\Post(path="/api/provider/cancel_subscription",
          *      tags={"Provider"},
          *      operationId="CancelSignature",
          *      description="Cancela assinatura",
@@ -169,14 +169,14 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
 });
 
 /** Credit card */
-Route::group(['prefix' => 'api/v3', 'middleware' => ['auth.admin_api', 'cors']], function(){
+Route::group(['prefix' => 'api', 'middleware' => ['auth.admin_api', 'cors']], function(){
     Route::post('/addCard', array('uses' => 'CreditCardController@addPaymentCard'));
     Route::post('/defaultCard', array('uses' => 'CreditCardController@defaultCard'));
     Route::post('/removeCard', array('uses' => 'CreditCardController@removeCard'));
 });
 
 Route::group(['middleware' => 'auth.admin'], function() {
-    Route::get('/admin/test_pay_status/{id}', 'api\v3\SignatureController@testBilletPayment');
+    Route::get('/admin/test_pay_status/{id}', 'api\SignatureController@testBilletPayment');
 });
 
 /**

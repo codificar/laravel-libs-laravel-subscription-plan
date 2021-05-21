@@ -13,7 +13,7 @@
 @stop
 
 @section('content')
-<div id="VueJs">
+<div id="VueJs"  class="col-lg-12">
 	<signature-list
         signatures = "{{ $signatures }}"
         suspendOrActivate="{{ AuthUtils::hasPermissionByUrl('AdminUserEdit') }}"

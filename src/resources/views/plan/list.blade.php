@@ -16,7 +16,7 @@
 @stop
 
 @section('content')
-<div id="VueJs">
+<div id="VueJs"  class="col-lg-12" >
     <plan-list
             plans = "{{ $plans }}"
             edit-permission="{{ AuthUtils::hasPermissionByUrl('AdminUserEdit') }}"

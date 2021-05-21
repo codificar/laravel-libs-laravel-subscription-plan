@@ -121,7 +121,6 @@ export default {
 
         if (this.edit) {
             let values =  JSON.parse(this.Plan);
-            console.log('qwe', values);
             this.plan.id = values.id;
             this.plan.name = values.name;
             this.plan.period = values.period;
@@ -204,7 +203,7 @@ export default {
                                         <div class="form-group">
                                             <label for="plan_price" class=" control-label">{{ trans('plan.plan_price') }}*</label>
                                                 <div class="input-group">
-                                                    <span class="input-group-addon">{{ trans('payment.dollar_sign') }}*</span>
+                                                    <span class="input-group-addon">{{ trans('payment.dollar_sign') }}</span>
                                                     <input v-model="plan.plan_price" required name="plan_price" type="text" id="plan_price" 
                                                     class="form-control input-lg" auto-focus="" 
                                                     :placeholder="trans('plan.plan_price')" >
@@ -262,7 +261,6 @@ export default {
                                         <select type="text" v-model="plan.allow_cancelation" name="allow_cancelation"
                                             class="form-control input-lg" auto-focus = "" 
                                             :placeholder="trans('plan.allow_cancelation')" >
-                                            <option value="">Escolha um item</option>
                                             <option value="1">Sim</option>
                                             <option value="0">Não</option>
                                         </select>

@@ -21,7 +21,7 @@ return array(
     'semiannual_period'         =>  'Semestral',
     'anual_period'              =>  'Anual', 
     'validityInDays'            =>  'Validez (en días)', 
-    'client'                    =>  'Cliente',
+    'client'                    =>  'Disponible para',
     'provider'                  =>  'Conductor', 
     'user'                      =>  'Usuario',
     'id'                        =>  'Id',

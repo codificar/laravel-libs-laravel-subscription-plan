@@ -17,7 +17,7 @@
 @stop
 
 @section('content')
-<div id="VueJs">
+<div id="VueJs"  class="col-lg-12">
 	<checkout-plan 
 		:plan="{{ $plan }}" 
 		:payment="{{ $payment }}" 
