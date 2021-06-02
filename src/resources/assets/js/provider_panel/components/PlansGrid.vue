@@ -11,6 +11,12 @@
                     <div class="card-plan">
                         <h2>{{ this.trans('user_provider_web.actual_plan') + planValidName }}</h2>
                         <p>{{ this.trans('user_provider_web.expiry_in') + isValid.next_expiration }}</p>
+                        <div v-if="isValid.is_cancelled">
+                            <p class="text-danger">{{ this.trans('signature.signature_cancelation') }}</p>
+                        </div>
+                        <button v-else data-toggle="modal" data-target="#myModal" class="btn btn-inverse btn-flat btn-block" >
+                            {{trans('user_provider_web.cancel') }}
+                        </button>
                     </div>
                 </div>
                 <div class="plans-grid">
@@ -22,11 +28,31 @@
             </div>
             	
         </div>	
+        
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ trans('user_provider_web.cancel') }}</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>{{ trans('user_provider_web.are_you_sure_cancel') }}</p>
+                </div>
+                <div class="modal-footer">
+                    <button v-if="!onLoad" type="button" class="btn btn-success" @click="cancelPlan">{{ trans('user_provider_web.cancel') }}</button>
+                    <button v-else type="submit" class="btn btn-success m-progress">{{ trans('user_provider_web.cancel') }}</button>
+                </div>
+            </div>
+            </div>
+        </div>
     </div>    
 </template>
 
 <script>
 import plans from "./Plans.vue";
+import axios from 'axios'
 
 export default {
     props: [ 
@@ -38,6 +64,7 @@ export default {
     },
     data() {
         return {
+            onLoad: false,
             isValid: '',
             arrPlansList: ''
         }
@@ -49,6 +76,43 @@ export default {
                 let plan = this.arrPlansList = this.arrPlansList.filter((arr)=>arr.id === id )
                 return plan[0].name
             }
+        }
+    },
+    methods: {
+        cancelPlan() {
+            this.onLoad = true
+
+            axios.post('/libs/provider/cancel_subscription', {
+                subscription_id: this.isValid.signature_id
+            })
+            .then(response => {
+                this.onLoad = false
+                jQuery("#myModal").modal("hide");
+
+                if (response.data.success) {
+                    this.$swal({
+                        type: 'success',
+                        title: this.trans('signature.signature_cancelation'),
+                        text: response.data.message
+                    })
+                } else {
+                    this.$swal({
+                        type: 'error',
+                        title: 'Error!',
+                        text: response.data.message
+                    })
+                }
+            })
+            .catch(error => {
+                this.onLoad = false
+                jQuery("#myModal").modal("hide");
+
+                this.$swal({
+                    type: 'error',
+                    title: 'Error!'
+                })
+                console.log(error);
+            })
         }
     },
     mounted() {

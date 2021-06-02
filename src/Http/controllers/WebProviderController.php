@@ -35,6 +35,7 @@ class WebProviderController extends Controller {
 				$validSignature['signature_id'] = $signature->id;
 				$validSignature['next_expiration'] = date('d/m/Y', $signatureNextExpiration);
 				$validSignature['plan_id'] = $signature->plan_id;
+				$validSignature['is_cancelled'] = $signature->is_cancelled;
 			} else {
 				$validSignature['is_valid'] = false;
 			}

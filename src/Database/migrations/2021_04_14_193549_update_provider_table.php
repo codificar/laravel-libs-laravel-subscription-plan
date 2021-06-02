@@ -18,6 +18,10 @@ class UpdateProviderTable extends Migration
             if (!Schema::hasColumn('provider', 'signature_id')) {
                 $table->integer('signature_id')->nullable();
             }
+
+            if (!Schema::hasColumn('provider', 'document')) {
+                $table->string("document")->nullable()->default(null);
+            }
         });
     }
 
@@ -28,9 +32,9 @@ class UpdateProviderTable extends Migration
      */
     public function down()
     {
-        Schema::table('provider', function (Blueprint $table) {
-            //
-            $table->integer('signature_id');
-        });
+		Schema::table('provider',function($table){
+			$table->dropColumn("signature_id");
+			$table->dropColumn("document");
+		});
     }
 }

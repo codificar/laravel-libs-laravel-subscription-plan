@@ -268,6 +268,7 @@ return array(
 	'value'				=> 'Valor: ',
 	'confirm_signature' => 'Confirmar assinatura',
 	'are_you_sure'		=> 'Tem certeza que você quer assinar o plano?',
+	'are_you_sure_cancel'=> 'Tem certeza que você quer cancelar o plano?',
 	'success'			=> 'Plano assinado!',
 	'separate_signature_debit' => 'Débito por assinatura.',
 	'checkout_plan'		=> 'Adquirir plano',
@@ -278,6 +279,7 @@ return array(
 	'signature_success' => 'Plano assinado com sucesso!',
 	'payment_fail'		=> 'Erro ao processar pagamento.',
 	'payment_error'		=> 'Erro ao processar dados.',
+	'select_charge_type'	=> 'Selecione o tipo de pagamento.',
 
 	/** Credit card page */
 	'credit_card'			=> 'Cartões de crédito/débito',

@@ -266,6 +266,7 @@ return array(
 	'value'				=> 'Value: ',
 	'confirm_signature' => 'Confirm Subscription',
 	'are_you_sure'		=> 'Are you sure you want to sign the plan?',
+	'are_you_sure_cancel'=> 'Are you sure you want to cancel the plan?',
 	'success'			=> 'Plan signed!',
 	'separate_signature_debit' => 'Subscription charge.',
 	'checkout_plan'		=> 'Purchase plan',

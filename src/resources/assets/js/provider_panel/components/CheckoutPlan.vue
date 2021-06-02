@@ -12,23 +12,32 @@
                     <p>{{ trans('user_provider_web.period') + plan.period + ' ' + trans('user_provider_web.days') }}</p>
                     <p>{{ trans('user_provider_web.value') + formatMoney(plan.plan_price) }}</p>
                 </div>
-                <div class="add-card">
-                    <p>{{ trans('user_provider_web.add_card') + ':' }}</p>
-                    <button type="button" data-toggle="modal" data-target="#modalCard" class="btn btn-info button-card">{{ trans('user_provider_web.btn_add') }}</button>
-                </div>
-                <div class="plan-detail-card">
                     <div class="box">
-                        <p>{{ trans('user_provider_web.select_card') }}</p>
-                        <select v-model="payment_id">
-                            <option disabled value="">{{ trans('user_provider_web.select') }}</option>
-                            <option v-for="data in allCards" :key="data.id" :value="data.id">{{ data.card_type + ' **** ' + data.last_four}}</option>
-                        </select>
-                    </div>
-
-                    <button type="button" class="button-confirm" data-toggle="modal" data-target="#myModal" >{{ trans('user_provider_web.confirm_signature') }}</button>  
+                        <p>{{ trans('user_provider_web.select_charge_type') }}</p>
+                    <select v-model="charge_type">
+                        <option disabled value="">{{ trans('user_provider_web.select') }}</option>
+                        <option v-for="data in getPayments" :key="data.charge_type" :value="data.charge_type">{{ data.name }}</option>
+                    </select>
                 </div>
+
+                <div class="box" v-if="'card' === charge_type">
+                    <div class="add-card">
+                        <p>{{ trans('user_provider_web.add_card') + ':' }}</p>
+                        <button type="button" data-toggle="modal" data-target="#modalCard" class="btn btn-info button-card">{{ trans('user_provider_web.btn_add') }}</button>
+                    </div>
+                    <div class="plan-detail-card">
+                        <div class="box">
+                            <p>{{ trans('user_provider_web.select_card') }}</p>
+                            <select v-model="payment_id">
+                                <option disabled value="">{{ trans('user_provider_web.select') }}</option>
+                                <option v-for="data in allCards" :key="data.id" :value="data.id">{{ data.card_type + ' **** ' + data.last_four}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button v-else type="button" style="margin-left: 75%" class="btn btn-success col-sm-3" data-toggle="modal" data-target="#myModal">{{ trans('user_provider_web.confirm_signature') }}</button>  
             </div>
-  
         </div>
 
         <!-- Modal -->
@@ -72,10 +81,12 @@ export default {
     ],
     data() {
         return {
+            payments: [],
             allCards: [],
             plan_id: '',
             provider_id: '',
             payment_id: '',
+            charge_type: '',
             onLoad: false
         }
     },
@@ -93,7 +104,7 @@ export default {
                 plan_id: this.plan_id,
                 provider_id: this.provider_id,
                 payment_id: this.payment_id,
-                charge_type: 'card'
+                charge_type: this.charge_type,
             })
             .then(response => {
                 this.onLoad = false
@@ -125,11 +136,25 @@ export default {
             })
         }
     },
+    computed: {
+        getPayments() {
+            return this.payments;
+        }
+    },
     created() {
         this.plan_id = this.plan.id 
         this.provider_id = this.provider.id
         this.allCards = this.payment
-
+        this.payments = [
+            {
+                charge_type: 'billet',
+                name: this.trans('payment.billet')
+            },
+            { 
+                charge_type: 'card',
+                name: this.trans('payment.credit_card')
+            }
+        ]
         this.$eventBus.$on('send-data', (data) => {
             this.allCards.push(data)
         });
@@ -171,6 +196,7 @@ export default {
     .plan-detail-card {
         align-self: center;
         width: 100%;
+        height: 250px;
         min-width: 500px;
         margin-bottom: 20px;
         border: none;
@@ -197,17 +223,7 @@ export default {
     }
 
     .plan-detail-card .button-confirm {
-        background: #1DB954;
-        color: #FFF;
-        padding: 16px 22px;
-        margin-top: 18px;
         cursor: pointer;
-
-        border: none;
-        border-radius: 50px;
-
-        font-size: 16px;
-        font-weight: 500;
 
         text-transform: uppercase;
         letter-spacing: 1px;

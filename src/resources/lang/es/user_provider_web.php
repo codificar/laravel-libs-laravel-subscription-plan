@@ -270,6 +270,7 @@ return array(
 	'confirm_signature' => 'Confirmar la firma!',
 	'success'			=> 'Plano firmado!',
 	'are_you_sure'		=> 'Está seguro de que desea firmar el plan?',
+	'are_you_sure_cancel'=> 'Está seguro de que desea cancelar el plan?',
 	'separate_signature_debit' => 'Débito la firma.',
 	'checkout_plan'		=> 'Adquirir plano',
 	'acquire'			=> 'Adquirir: ',

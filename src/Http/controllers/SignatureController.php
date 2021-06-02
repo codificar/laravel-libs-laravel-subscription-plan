@@ -68,7 +68,7 @@ class SignatureController extends Controller
             $return = $gateway->billetCharge(
                 $value, 
                 $provider, 
-                route('GatewayPostbackBillet'), 
+                route('SubscriptionPostback'), 
                 Carbon::now()->addDays(Settings::getBilletExpirationDays())->toIso8601String(),
                 Settings::getBilletInstructions()
             );
@@ -105,8 +105,9 @@ class SignatureController extends Controller
         $provider->updateSignatureId($signature->id);
         $transaction->setSignatureId($signature->id);
         $data['signature_id'] = $signature->id;
-
+        
         if($billetUrl) {
+            $data['billet_url'] = $billetUrl;
             NewSubscriptionMail::dispatch($signature);
         }
 

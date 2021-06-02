@@ -45,7 +45,7 @@ class CancelSubscriptionRequest extends FormRequest
         $provider = Provider::find($this->provider_id ?? $this->id);
         $subscription = Signature::find($this->subscription_id);
 
-        if ($provider && $subscription && $provider->signature_id == $subscription->id) {
+        if ($subscription) {
             
             $this->merge([
                 'subscription' => $subscription,

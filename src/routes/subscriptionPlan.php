@@ -38,6 +38,7 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
         Route::get('/get_plans', array('as' => 'GetPlans','uses' => 'WebProviderController@getPlans'));
         Route::get('/credit_card', array('as' => 'ListCreditCard','uses' => 'WebProviderController@listCards'));
         Route::post('/plan/updatePlan', array('as' => 'UpdatePlan', 'uses' => 'SignatureController@newProviderSubscription'));
+        Route::post('/cancel_subscription', array('uses' => 'SignatureController@cancelSubscription'));
         Route::get('/plan/{id}', array('as' => 'CheckoutPlan', 'uses' => 'PlanController@checkoutPlan'));
     });
 
@@ -166,6 +167,8 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
 
         Route::get('/plans', array('uses' => 'PlanController@getPlansListForProvider'));
     });
+
+    Route::post('/api/libs/postback', 'GatewayPostbackController@postback')->name('SubscriptionPostback');;
 });
 
 /** Credit card */
