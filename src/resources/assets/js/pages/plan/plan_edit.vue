@@ -55,6 +55,7 @@ export default {
                 period: "", 
                 validity: "",
                 plan_price: "", 
+                plan_required: "",
                 client: "",
                 visibility: 1 
             }  
@@ -126,6 +127,7 @@ export default {
             this.plan.period = values.period;
             this.plan.validity = values.validity;
             this.plan.plan_price = values.plan_price;
+            this.plan.plan_required = values.required;
             this.plan.client = values.client;
             this.plan.visibility = values.visibility;
             this.plan.location = values.location;
@@ -255,12 +257,26 @@ export default {
                                 </div>
 
                                 <div class="col-md-4 col-sm-12">
-                                    <!--Location-->
+                                    <!--Allow Cancelation-->
                                     <div class="form-group">
-                                        <label for="location" class=" control-label">{{ trans('plan.allow_cancelation') }}*</label>
+                                        <label for="allow_cancelation" class=" control-label">{{ trans('plan.allow_cancelation') }}*</label>
                                         <select type="text" v-model="plan.allow_cancelation" name="allow_cancelation"
                                             class="form-control input-lg" auto-focus = "" 
                                             :placeholder="trans('plan.allow_cancelation')" >
+                                            <option value="1">Sim</option>
+                                            <option value="0">Não</option>
+                                        </select>
+                                        <div class="help-block with-errors"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-sm-12">
+                                    <!--Required-->
+                                    <div class="form-group">
+                                        <label for="required" class=" control-label">{{ trans('plan.plan_required') }}*</label>
+                                        <select type="text" v-model="plan.plan_required" name="plan_required"
+                                            class="form-control input-lg" auto-focus = "" 
+                                            :placeholder="trans('plan.plan_required')" >
                                             <option value="1">Sim</option>
                                             <option value="0">Não</option>
                                         </select>

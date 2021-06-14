@@ -4,6 +4,7 @@ return array(
     'plan_edit'                 =>  'Editar plan',  
     'plan'                      =>  'Plan', 
     'plural'                    =>  'Planes',
+    'delete'                    =>  'Borrar Plan',
     'added_success'             =>  'Plan registrado con éxito',
     'added_fail'                =>  'Fracaso en registrar plan', 
     'please_fill'               =>  'Por favor llene todos los campos necesarios', 
@@ -37,6 +38,7 @@ return array(
     'allow_cancelation'         => '¿Habilitar la cancelación antes de que expire la suscripción?',
     'allow_cancelation_error'   => '¡No está permitido cancelar antes del vencimiento!',
     'filters'                   =>  'Filtros',
+    'plan_required'             =>  '¿Se requiere un plan para que el proveedor se conecte?',
     
     'reset'                     => 'Reiniciar',
     'send'                      => 'Enviar',

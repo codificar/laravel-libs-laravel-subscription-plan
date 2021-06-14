@@ -4,7 +4,7 @@ namespace Codificar\LaravelSubscriptionPlan\Models;
 
 use Illuminate\Database\Eloquent\Model as Model;
 use Illuminate\Http\Request;
-use Codificar\LaravelSubscriptionPlan\Models\ignature;
+use Codificar\LaravelSubscriptionPlan\Models\Signature;
 use Illuminate\Pagination\Paginator;
 use Schema, DB, Provider;
 
@@ -137,20 +137,12 @@ class Plan extends Model
      */
 	public static function getPlansListForProvider ($locationId)
 	{
-		$plans = self::where('client', 'Provider')->where('visibility', 1)->get();
+		\Log::info($locationId);
+		$plans = self::where('client', 'Provider')
+			->where('location', $locationId)
+			->where('visibility', 1)->get();
 
-		$return = [];
-
-		for ($i=0; $i < count($plans); $i++) { 
-			$plans[$i]->plan_price = currency_format($plans[$i]->plan_price);
-
-			if ($plans[$i]->location != null && $locationId != $plans[$i]->location)
-				continue;
-
-			array_push($return, $plans[$i]);
-		}
-		
-		return $return;
+		return $plans;
 	}
 
 	/**

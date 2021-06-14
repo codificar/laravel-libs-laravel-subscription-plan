@@ -4,15 +4,18 @@ namespace Codificar\LaravelSubscriptionPlan\Http\Controllers;
 
 use Codificar\LaravelSubscriptionPlan\Models\Transaction;
 use Codificar\LaravelSubscriptionPlan\Models\Settings;
+use Codificar\LaravelSubscriptionPlan\Models\Plan;
 
 use Codificar\LaravelSubscriptionPlan\Models\Signature;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use Codificar\LaravelSubscriptionPlan\Http\Requests\CancelSubscriptionRequest;
+use Codificar\LaravelSubscriptionPlan\Http\Requests\PlataformSubscriptionDetailsRequest;
 use Codificar\LaravelSubscriptionPlan\Http\Requests\SubscriptionDetailsFormRequest;
 use Codificar\LaravelSubscriptionPlan\Http\Requests\UpdateSignatureProvider;
 
+use Codificar\LaravelSubscriptionPlan\Http\Resources\PlataformSubscriptionDetailsResource;
 use Codificar\LaravelSubscriptionPlan\Http\Resources\SubscriptionDetailResource;
 use Codificar\LaravelSubscriptionPlan\Http\Resources\UpdatePlanResource;
 use Codificar\LaravelSubscriptionPlan\Jobs\NewSubscriptionMail;
@@ -160,6 +163,26 @@ class SignatureController extends Controller
         return response()->json([
             'success' => $request->subscription->cancel()
         ]);
+    }
+
+    /**
+     * Details if the plataform uses or not the subscription module
+     * @param PlataformSubscriptionDetails $request
+     * @return json
+     */
+    public function plataformRequireSubscription(PlataformSubscriptionDetailsRequest $request){
+        $plans = Plan::getPlansListForProvider($request->location->id);
+        $requiredPlan = null;
+
+        foreach ($plans as $plan) {
+            if($plan->required){
+                \Log::info('required');
+                $requiredPlan = $plan;
+                break;
+            }
+        }
+
+        return new PlataformSubscriptionDetailsResource(['plan' => $requiredPlan]);
     }
 
     /**

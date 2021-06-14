@@ -50,7 +50,7 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
      */
     Route::group(['prefix' => 'api/libs/provider' ,'middleware' => 'auth.provider_api:api'], function() {
         /**
-         * @OA\Post(path="/api/provider/update_plan",
+         * @OA\Post(path="/api/libs/provider/update_plan",
          *      tags={"Provider"},
          *      operationId="NewSubscription",
          *      description="Cria uma nova assinatura",
@@ -103,7 +103,7 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
         Route::post('/update_plan', array('uses' => 'SignatureController@newProviderSubscription'));
 
         /**
-         * @OA\Get(path="/api/provider/subscription_details",
+         * @OA\Get(path="/api/libs/provider/subscription_details",
          *      tags={"Provider"},
          *      operationId="SubscriptionDetails",
          *      description="Retorna os detalhes de uma assinatura",
@@ -127,8 +127,39 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
          */
         Route::get('/subscription_details', array('uses' => 'SignatureController@getDetails'));
 
+
         /**
-         * @OA\Post(path="/api/provider/cancel_subscription",
+         * @OA\Get(path="/api/libs/provider/plans/required_plans",
+         *      tags={"Provider"},
+         *      operationId="GetRequiredPlans",
+         *      description="Retorna os planos obrigatórios para utilizar a plataforma,
+         *      @OA\Parameter(
+         *          name="lat",
+         *          description="latitude do usuário",
+         *          in="query",
+         *          required=true,
+         *          @OA\Schema(type="integer")
+         *          name="lng",
+         *          description="longitude do usuário",
+         *          in="query",
+         *          required=true,
+         *          @OA\Schema(type="integer")
+         *      ),
+         *      @OA\Response(
+         *          response="200",
+         *          description="Retorna os planos obrigatórios para utilizar a plataforma",
+         *          @OA\JsonContent(ref="#/components/schemas/PlataformSubscriptionDetailsResource")
+         *      ),
+         *      @OA\Response(
+         *          response="402",
+         *          description="Erro na validação dos dados enviados."
+         *      ),
+         * )
+         */
+        Route::get('/plans/required_plans', array('uses' => 'SignatureController@plataformRequireSubscription'));
+
+        /**
+         * @OA\Post(path="/api/libs/provider/cancel_subscription",
          *      tags={"Provider"},
          *      operationId="CancelSignature",
          *      description="Cancela assinatura",

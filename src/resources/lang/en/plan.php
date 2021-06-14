@@ -2,6 +2,7 @@
 return array(
     'plan_add'                  =>  'Add plan',
     'plan_edit'                 =>  'Edit plan',  
+    'delete'                    =>  'Delete Plan',
     'plan'                      =>  'Plan', 
     'plural'                    =>  'Plans',
     'added_success'             =>  'Plan successfully registered',
@@ -37,6 +38,7 @@ return array(
     'allow_cancelation'         => 'Enable cancellation before the subscription expires?',
     'allow_cancelation_error'   => 'It is not allowed to cancel before expiration!',
     'filters'                   =>  'Filters',
+    'plan_required'             =>  'Plan required for provider to go online?',
     
     'reset'                     => 'Reset',
     'send'                      => 'Send',

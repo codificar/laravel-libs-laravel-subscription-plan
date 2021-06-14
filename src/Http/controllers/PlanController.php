@@ -67,6 +67,7 @@ class PlanController extends Controller
         $plan->visibility = $values['visibility'];
         $plan->location = $values['location'];
         $plan->allow_cancelation = $values['allow_cancelation'];
+        $plan->required = $values['plan_required'];
         $plan->save();
         
         return Redirect::to('admin/plan/list');

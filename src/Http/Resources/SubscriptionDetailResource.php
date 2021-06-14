@@ -52,6 +52,8 @@ class SubscriptionDetailResource extends JsonResource
             'next_expiration' => date('d/m/Y', strtotime($this['signature']['next_expiration'])),
             'good_cancel_date' => date('d/m/Y', strtotime($goodToCancel)),
             'plan_name' => $this['signature']->plan->name,
+            'plan_id' => $this['signature']->plan->id,
+            'is_required' => $this['signature']->plan->required,
             'is_active' => $this['signature']->activity,
             'is_cancelled' => $this['signature']->is_cancelled,
             'paid_status' => $this['transaction']->status,

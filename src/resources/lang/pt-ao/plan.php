@@ -4,6 +4,7 @@ return array(
     'plan_edit'                 =>  'Editar Plano',  
     'plan'                      =>  'Plano', 
     'plural'                    =>  'Planos',
+    'delete'                    =>  'Deletar Plano',
     'added_success'             =>  'Plano cadastrado com sucesso',
     'added_fail'                =>  'Falha ao cadastrar plano', 
     'please_fill'               =>  'Favor preencher os campos corretamente', 
@@ -37,6 +38,8 @@ return array(
     'allow_cancelation'         => 'Habilitar cancelamento antes de vencer a assinatura?',
     'allow_cancelation_error'   => 'Não é permitido cancelar antes do vencimento!',
     'filters'                   =>  'Filtros',
+    'plan_required'             =>  'Plano requerido para prestador ficar online?',
+
 
     'reset'                     => 'Resetar',
     'send'                      => 'Enviar',
