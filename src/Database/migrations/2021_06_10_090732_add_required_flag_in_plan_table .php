@@ -14,7 +14,7 @@ class AddRequiredFlagInPlanTable extends Migration
     public function up()
     {
         Schema::table('plan', function (Blueprint $table) {
-            if (!Schema::hasColumn('plan', 'reuired')) {
+            if (!Schema::hasColumn('plan', 'required')) {
                 $table->boolean('required')->default(false);
             }
         });
