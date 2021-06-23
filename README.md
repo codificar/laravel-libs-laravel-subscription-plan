@@ -1,4 +1,4 @@
-# laravel-bank
+# laravel-subscription-plan
 A CRUD bank library for laravel.
 Uma biblioteca para CRUD de banco
 
@@ -9,12 +9,7 @@ Uma biblioteca para CRUD de banco
 auth.admin
 ```
 - 2º: The following tables are required. The columns are the same as in the UBERSERVICOS project:
-```
-Bank
-Country
-Profile
-Permission
-PermissionProfile
+``
 ```
 
 ## Getting Started
@@ -26,28 +21,28 @@ PermissionProfile
 		{
 			"type":"package",
 			"package": {
-			  "name": "codificar/bank",
-			  "version":"master",
-			  "source": {
-				  "url": "https://libs:ofImhksJ@git.codificar.com.br/laravel-libs/laravel-bank.git",
-				  "type": "git",
-				  "reference":"master"
+				"name": "codificar/laravel-subscription-plan",
+				"version":"master",
+				"source": {
+					"url": "https://libs:ofImhksJ@git.codificar.com.br/laravel-libs/laravel-subscription-plan.git",
+					"type": "git",
+					"reference":"master"
 				}
 			}
-		}
+		},
 	],
 
 // ...
 
 "require": {
 	// ADD this
-	"codificar/bank": "dev-master",
+	"codificar/laravel-subscription-plan": "dev-master#62ab0ce9"
 },
 
 ```
 - If you want add a specific version (commit, tag or branch), so add like this:
 ```
-"codificar/bank": "dev-master#dev",
+"codificar/laravel-subscription-plan": "dev-master#dev",
 ```
 - Now add 
 ```
@@ -56,7 +51,7 @@ PermissionProfile
 		//...
 		"psr-4": {
 			// Add your Lib here
-		   "Codificar\\Bank\\": "vendor/codificar/bank/src",
+		   	"Codificar\\LaravelSubscriptionPlan\\": "vendor/codificar/laravel-subscription-plan/src",
 			//...
 		}
 	},
@@ -84,7 +79,7 @@ Check if has the laravel publishes in composer.json with public_vuejs_libs tag:
 'providers' => [
 		 ...,
 			// The new package class
-			Codificar\Bank\BankServiceProvider::class,
+			Codificar\LaravelSubscriptionPlan\SubscriptionPlanServiceProvider::class,
 		],
 ```
 - Migrate the database tables
@@ -102,14 +97,38 @@ php artisan serve
 ## Admin (web)
 | Type  | Return | Route  | Description |
 | :------------ |:---------------: |:---------------:| :-----|
-| `get` | View/html | /admin/banks | View to list all banks |
-| `get` | View/html | /admin/banks/create | View to create a bank | 
-| `get` | View/html | /admin/banks/update/{id} | View to update a bank |
-| `get` | Api/json | /api/banks/filter | Endpoint to filter banks by id, name, code, agency_max_length,agency_digit_required, agency_digit_max_length, account_max_length, account_digit_required, account_digit_max_length, country_iso) |
-| `resource` | Api/json | /api/banks | Api to get t|
-| `get` | Api/json | /api/countries | Api to get the list of countries |
+| `get` | Api/json | api/admin/plan | Panel route to get plans
+| `post` | Api/json | api/admin/storePlan | Plan route to save plan
+| `get` | View/html | api/admin/plan/add | Panel page to add plan
+| `get` | Api/json | api/admin/plan/filter | Route to filter plans
+| `post` | Api/json | api/admin/plan/delete | Route to delete plans
+| `post` | Api/json | api/admin/plan/update | Route to update plans
+| `get` | View/html | api/admin/plan/signatures | Return list signatures pages
 
-## Translation files route
-| Type  | Return | Route  | Description |
-| :------------ |:---------------: |:---------------:| :-----|
-| `get` | Api/json | /libs/lang.trans/{file} | Api to get the translation files of laravel and use inside the vue.js |
+| `get` | View/html | admin/plan/add | Admin page to add plan
+| `post` | View/html | admin/plan/store | Admin route to add plan
+| `get` | View/html | admin/plan | Return the list page to list plans
+| `get` | View/html | admin/plan/list | Return the list page to list plans
+| `get` | View/html | admin/plan/filter | Route to filter plans
+| `post` | View/html | admin/plan/delete/{id} | Route to delete plans
+| `get` | View/html | admin/plan/{id} | Return the plan by id
+| `get` | View/html | admin/signature | Return the page to list active signatures
+| `post` | View/html | admin/signature/suspend/{id} | Route to suspend a signature
+
+| `get` | View/html |  libs/provider/plans | Panel route to list plans availables to provider
+| `get` | Api/json |  libs/provider/credit_card | List the provider credit cards
+| `post` | Api/json |  libs/provider/plan/updatePlan | Route to update provider plan
+| `post` | Api/json |  libs/provider/cancel_subscription | Route to cancel subscription
+| `get` | View/html |  libs/provider/plan/{id} | List the plans details to provider
+
+| `post` | Api/json | api/libs/provider/update_plan | Route to update provider plan
+| `get` | Api/json | api/libs/provider/subscription_details | List the details of the active plan
+| `get` | Api/json | api/libs/provider/plans/required_plans | Return the required plan to provider stay online
+| `post` | Api/json | api/libs/provider/cancel_subscription | Route to provider cancel subscription
+| `get` | Api/json | api/libs/provider/plans | List availables plans to provider
+
+| `post` | Api/json | /api/libs/postback | Route to postback billet payment status
+
+| `post` | Api/json | api/addCard | Route to add card
+| `post` | Api/json | api/defaultCard | Route to get the default card
+| `post` | Api/json | api/removeCard | route to remove card
