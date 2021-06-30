@@ -171,14 +171,19 @@ class SignatureController extends Controller
      * @return json
      */
     public function plataformRequireSubscription(PlataformSubscriptionDetailsRequest $request){
-        $plans = Plan::getPlansListForProvider($request->location->id);
-        $requiredPlan = null;
 
-        foreach ($plans as $plan) {
-            if($plan->required){
-                \Log::info('required');
-                $requiredPlan = $plan;
-                break;
+        $requiredPlan = null;
+        $plans = null;
+        
+        if($request->location)
+            $plans = Plan::getPlansListForProvider($request->location->id);
+
+        if($plans){
+            foreach ($plans as $plan) {
+                if($plan->required){
+                    $requiredPlan = $plan;
+                    break;
+                }
             }
         }
 
