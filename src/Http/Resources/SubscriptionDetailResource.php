@@ -45,19 +45,26 @@ class SubscriptionDetailResource extends JsonResource
         $goodToCancel = Carbon::parse($nextExp);
         $goodToCancel = $goodToCancel->subDays(Settings::getBilletExpirationDays())->toDateString();
 
+        if($this['signature'] && $this['transaction']){
+            return [
+                'success' => true,
+                'id' => $this['signature']->id,
+                'activity' => $this['signature']['activity'],
+                'next_expiration' => date('d/m/Y', strtotime($this['signature']['next_expiration'])),
+                'good_cancel_date' => date('d/m/Y', strtotime($goodToCancel)),
+                'plan_name' => $this['signature']->plan->name,
+                'plan_id' => $this['signature']->plan->id,
+                'is_required' => $this['signature']->plan->required,
+                'is_active' => $this['signature']->activity,
+                'is_cancelled' => $this['signature']->is_cancelled,
+                'paid_status' => $this['transaction']->status,
+                'billet_link' => $this['transaction']->billet_link
+            ];
+        }
+
         return [
             'success' => true,
-            'id' => $this['signature']->id,
-            'activity' => $this['signature']['activity'],
-            'next_expiration' => date('d/m/Y', strtotime($this['signature']['next_expiration'])),
-            'good_cancel_date' => date('d/m/Y', strtotime($goodToCancel)),
-            'plan_name' => $this['signature']->plan->name,
-            'plan_id' => $this['signature']->plan->id,
-            'is_required' => $this['signature']->plan->required,
-            'is_active' => $this['signature']->activity,
-            'is_cancelled' => $this['signature']->is_cancelled,
-            'paid_status' => $this['transaction']->status,
-            'billet_link' => $this['transaction']->billet_link
+            'id'      => null
         ];
     }
 }

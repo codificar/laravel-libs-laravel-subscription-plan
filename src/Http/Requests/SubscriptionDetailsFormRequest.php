@@ -28,10 +28,7 @@ class SubscriptionDetailsFormRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'signature' => 'required',
-            'transaction' => 'required',
-        ];
+        return [];
     }
 
     /**
