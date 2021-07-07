@@ -1,6 +1,6 @@
 <?php
 
-namespace api\v3;
+namespace Codificar\LaravelSubscriptionPlan\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
