@@ -27,5 +27,5 @@
 @endsection
 @section('javascripts')
 <script src="/libs/signature/lang.trans/plan,payment"> </script> 
-<script src="{{ assets('vendor/codificar/subscription-plan/subscriptionPlan.vue.js') }}"> </script> 
+<script src="{{ asset('vendor/codificar/subscription-plan/js/subscriptionPlan.vue.js') }}"> </script> 
 @endsection
