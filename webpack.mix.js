@@ -11,4 +11,6 @@ let mix = require('laravel-mix');
  |
  */
 
-mix.js('src/resources/assets/js/subscriptionPlan.vue.js', 'public/js');
+mix.js("src/resources/assets/js/subscriptionPlan.vue.js", "public/js").vue();
+
+mix.copyDirectory('public/js', '../../../public/vendor/codificar/subscription-plan/js');

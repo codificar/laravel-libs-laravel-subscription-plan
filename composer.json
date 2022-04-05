@@ -1,13 +1,46 @@
 {
-    "name": "codificar/laravel-subscription-plan",
+    "name": "codificar/subscription-plan",
     "description": "A signature library for laravel.",
-    "authors": [{
-        "name": "Codificar",
-        "email": "libs@codificar.com.br"
-    }],
+    "authors": [
+        {
+            "name": "Vladimir Pereira",
+            "email": "vladimir.pereira@codificar.com.br"
+        },
+        {
+            "name": "Raphael Canguçu",
+            "email": "raphael.cangucu@codificar.com.br"
+        }
+    ],
+    "repositories": [
+        {
+        "type": "vcs",
+        "url": "https://libs:ofImhksJ@git.codificar.com.br/laravel-libs/laravel-subscription-plan.git"
+        },
+        {
+        "type": "package",
+        "package": {
+            "name": "codificar/subscription-plan",
+            "version": "master",
+            "source": {
+            "url": "https://libs:ofImhksJ@git.codificar.com.br/laravel-libs/laravel-subscription-plan.git",
+            "type": "git",
+            "reference": "master"
+            }
+        }
+        }
+    ],
     "autoload": {
         "psr-4": {
             "Codificar\\LaravelSubscriptionPlan\\": "src/"
         }
-    }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Codificar\\LaravelSubscriptionPlan\\SubscriptionPlanServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+
 }

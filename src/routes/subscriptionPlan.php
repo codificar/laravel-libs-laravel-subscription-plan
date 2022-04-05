@@ -195,7 +195,6 @@ Route::get('/libs/signature/lang.trans/{file}', function () {
         $strings[$name] = require $file;
     }
 
-    header('Content-Type: text/javascript');
-    return ('window.lang = ' . json_encode($strings) . ';');
-    exit();
-})->name('assets.lang');
+    return response('window.lang = ' . json_encode($strings) . ';')
+            ->header('Content-Type', 'text/javascript');
+});

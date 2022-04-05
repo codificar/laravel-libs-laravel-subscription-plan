@@ -1,29 +1,30 @@
 {
- "private": true,
- "scripts": {
-  "dev": "npm run development",
-  "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-  "watch": "npm run development -- --watch",
-  "watch-poll": "npm run watch -- --watch-poll",
-  "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
-  "prod": "npm run production",
-  "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
- },
- "dependencies": {
-  "axios": "^0.15.3",
-  "bootstrap": "^4.0.0",
-  "jquery": "^3.5.1",
-  "laravel-vue-pagination": "^2.3.1",
-  "lodash": "^4.17.10",
-  "lodash.clonedeep": "^4.5.0",
-  "lodash.omit": "^4.5.0",
-  "vue": "^2.6.12",
-  "vue-password": "^1.2.0",
-  "vue-sweetalert2": "^3.0.6",
-  "vuelidate": "^0.7.4"
- },
- "devDependencies": {
-  "cross-env": "^5.0.1",
-  "laravel-mix": "^1.4.2"
- }
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production"
+    },
+    "dependencies": {
+        "axios": "^0.15.3",
+        "bootstrap": "^4.0.0",
+        "jquery": "^3.5.1",
+        "laravel-vue-pagination": "^2.3.1",
+        "lodash": "^4.17.10",
+        "lodash.clonedeep": "^4.5.0",
+        "lodash.omit": "^4.5.0",
+        "vue": "^2.6.12",
+        "vue-password": "^1.2.0",
+        "vue-sweetalert2": "^3.0.6",
+        "vuelidate": "^0.7.4"
+    },
+    "devDependencies": {
+        "laravel-mix": "^6.0.6",
+        "vue-loader": "^15.9.7",
+        "vue-template-compiler": "^2.6.14"
+    }
 }

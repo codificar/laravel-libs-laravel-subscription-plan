@@ -1,3 +1,5 @@
 {
-    "/public/js/subscriptionPlan.vue.js": "/public/js/subscriptionPlan.vue.js"
+    "/public/js/subscriptionPlan.vue.js": "/public/js/subscriptionPlan.vue.js",
+    "/public/vendor/codificar/subscription-plan/js/subscriptionPlan.vue.js": "/public/vendor/codificar/subscription-plan/js/subscriptionPlan.vue.js",
+    "/public/vendor/codificar/subscription-plan/js/subscriptionPlan.vue.js.LICENSE.txt": "/public/vendor/codificar/subscription-plan/js/subscriptionPlan.vue.js.LICENSE.txt"
 }
