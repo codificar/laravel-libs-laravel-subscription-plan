@@ -43,5 +43,8 @@ return array(
     'clear_form'                =>  'Limpio',
     'filter'                    =>  'Filtro',
     'action_grid'               => 'Comportamiento ',
+    'action'                    => 'Acciones',
+    'edit'                      =>  'Editar', 
+    'delete'                    =>  'Eliminar', 
 
 );
