@@ -43,7 +43,7 @@ class CancelSubscriptionRequest extends FormRequest
     protected function prepareForValidation()
     {
         $provider = Provider::find($this->provider_id ?? $this->id);
-        $subscription = subscriptionPlan::find($this->subscription_id);
+        $subscription = Signature::find($this->subscription_id);
 
         if ($provider && $subscription && $provider->signature_id == $subscription->id) {
             
