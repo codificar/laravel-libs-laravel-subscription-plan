@@ -44,7 +44,7 @@ class SubscriptionDetailsFormRequest extends FormRequest
         $this->provider_id = $this->provider_id ?? $this->id;
 
         $this->provider = Provider::find($this->provider_id);
-        $this->signature = subscriptionPlan::find($this->provider->signature_id);
+        $this->signature = Signature::find($this->provider->signature_id);
         $this->transaction = null;
 
         if ($this->signature)

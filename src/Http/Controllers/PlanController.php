@@ -54,7 +54,7 @@ class PlanController extends Controller
     }
     
     public function store(Request $request){
-        $values = Input::get('plan');
+        $values = \Input::get('plan');
 
         if(array_key_exists('id', $values) && !empty($values['id']))
             $plan = Plan::find($values['id']);
