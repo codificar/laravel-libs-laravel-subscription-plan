@@ -1,4 +1,4 @@
 <?php
 return array(
-    'dollar_sign'							=> 'R$',
+    'dollar_sign'							=> 'KZ',
 );
