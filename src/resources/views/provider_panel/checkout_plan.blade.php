@@ -6,7 +6,7 @@
 			<h3 class="text-themecolor m-b-0 m-t-0">{{ trans('subscriptionPlanTrans::user_provider_web.checkout_plan') }}</h3>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a href="javascript:void(0)">
+					<a href="{{route('ProviderListPlans')}}">
                         {{ trans("subscriptionPlanTrans::dashboard.home") }}
 					</a>
 				</li>

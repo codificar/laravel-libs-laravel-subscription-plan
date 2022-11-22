@@ -298,5 +298,9 @@ return array(
 	'yes'					=> 'Sim',
 	'cancel'				=> 'Cancelar',
 	'actual_plan'			=> 'Plano atual: ',
-	'expiry_in'				=> 'Expira em: '
+	'expiry_in'				=> 'Expira em: ',
+	'select_payment_method' => 'Selecione o metodo de pagamento',
+    'credit_card'   		=> 'Cartão de crédito',
+    'billet'        		=> 'Boleto',
+	'billet_obs'			=> 'Será cobrado R$ 1,00 a mais para gerar o boleto'
 );

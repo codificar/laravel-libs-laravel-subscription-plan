@@ -12,20 +12,41 @@
                     <p>{{ trans('user_provider_web.period') + plan.period + ' ' + trans('user_provider_web.days') }}</p>
                     <p>{{ trans('user_provider_web.value') + formatMoney(plan.plan_price) }}</p>
                 </div>
-                <div class="add-card">
-                    <p>{{ trans('user_provider_web.add_card') + ':' }}</p>
-                    <button type="button" data-toggle="modal" data-target="#modalCard" class="btn btn-info button-card">{{ trans('user_provider_web.btn_add') }}</button>
-                </div>
                 <div class="plan-detail-card">
-                    <div class="box">
-                        <p>{{ trans('user_provider_web.select_card') }}</p>
-                        <select v-model="payment_id">
-                            <option disabled value="">{{ trans('user_provider_web.select') }}</option>
-                            <option v-for="data in allCards" :key="data.id" :value="data.id">{{ data.card_type + ' **** ' + data.last_four}}</option>
-                        </select>
+                        <div class="box">
+                            <p>{{ trans('user_provider_web.select_payment_method') }}</p>
+                            <select name="charge_type" @change="selectPaymentMethod($event)">
+                                <option value='' >{{ trans('user_provider_web.select_payment_method') }}</option>
+                                <option value='billet'>{{ trans('user_provider_web.billet') }}</option>
+                                <option value='card'>{{ trans('user_provider_web.credit_card') }}</option>
+                            </select>
+                        </div>
                     </div>
+                <div 
+                    v-if="chargeType == 'billet'"
+                    id="billet-content">
+                    <p style="text-align: center;">{{ trans('user_provider_web.billet_obs') }}</p>
+                </div>
+                <div 
+                    v-if="chargeType == 'card'"
+                    id="credit-card-content">
+                    <div class="add-card">
+                        <p>{{ trans('user_provider_web.add_card') + ':' }}</p>
+                        <button type="button" data-toggle="modal" data-target="#modalCard" class="btn btn-info button-card">{{ trans('user_provider_web.btn_add') }}</button>
+                    </div>
+                    <div class="plan-detail-card">
+                        <div class="box">
+                            <p>{{ trans('user_provider_web.select_card') }}</p>
+                            <select v-model="payment_id">
+                                <option disabled value="">{{ trans('user_provider_web.select') }}</option>
+                                <option v-for="data in allCards" :key="data.id" :value="data.id">{{ data.card_type + ' **** ' + data.last_four}}</option>
+                            </select>
+                        </div>
 
-                    <button type="button" class="button-confirm" data-toggle="modal" data-target="#myModal" >{{ trans('user_provider_web.confirm_signature') }}</button>  
+                    </div>
+                </div>
+                <div class="plan-detail-card button-container">
+                    <button v-if="chargeType" type="button" class="button-confirm" data-toggle="modal" data-target="#myModal" >{{ trans('user_provider_web.confirm_signature') }}</button>  
                 </div>
             </div>
   
@@ -74,6 +95,7 @@ export default {
         return {
             allCards: [],
             plan_id: '',
+            chargeType: '',
             provider_id: '',
             payment_id: '',
             onLoad: false
@@ -82,6 +104,13 @@ export default {
     methods: {
         formatMoney(number) {
             return number.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' })
+        },
+
+        /**
+        * Alterar o método de pagamento
+        */
+        selectPaymentMethod(event) {
+            this.chargeType = event.target.value;
         },
         /**
          * Gera uma assinatura do plano 
@@ -93,7 +122,7 @@ export default {
                 plan_id: this.plan_id,
                 provider_id: this.provider_id,
                 payment_id: this.payment_id,
-                charge_type: 'card'
+                charge_type: this.chargeType
             })
             .then(response => {
                 this.onLoad = false
@@ -241,5 +270,14 @@ export default {
 
     .add-card p {
         display: inline;
+    }
+    .button-container {
+        box-shadow: none;
+        margin: 0px;
+        padding: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
     }
 </style>

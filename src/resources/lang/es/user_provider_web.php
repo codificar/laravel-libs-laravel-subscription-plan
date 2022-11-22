@@ -299,5 +299,9 @@ return array(
 	'yes'					=> 'Si',
 	'cancel'				=> 'Cancelar',
 	'actual_plan'			=> 'Plano atual: ',
-	'expiry_in'				=> 'Expira en: '
+	'expiry_in'				=> 'Expira en: ',
+	'select_payment_method' => 'Seleccione el método de pago',
+    'credit_card'   		=> 'Tarjeta de crédito',
+    'billet'        		=> 'Boleto',
+	'billet_obs'			=> 'Se cobrará R$ 1,00 extra para generar el ticket'
 );
