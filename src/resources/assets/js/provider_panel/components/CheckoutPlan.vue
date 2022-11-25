@@ -17,6 +17,7 @@
                             <p>{{ trans('user_provider_web.select_payment_method') }}</p>
                             <select name="charge_type" @change="selectPaymentMethod($event)">
                                 <option value='' >{{ trans('user_provider_web.select_payment_method') }}</option>
+                                <option value='gatewayPix'>{{ trans('user_provider_web.direct_pix') }}</option>
                                 <option value='billet'>{{ trans('user_provider_web.billet') }}</option>
                                 <option value='card'>{{ trans('user_provider_web.credit_card') }}</option>
                             </select>
@@ -25,7 +26,10 @@
                 <div 
                     v-if="chargeType == 'billet'"
                     id="billet-content">
-                    <p style="text-align: center;">{{ trans('user_provider_web.billet_obs') }}</p>
+                </div>
+                <div 
+                    v-if="chargeType == 'gatewayPix'"
+                    id="billet-content">
                 </div>
                 <div 
                     v-if="chargeType == 'card'"
@@ -89,7 +93,9 @@ export default {
     props: [
         'plan',
         'provider',
-        'payment'
+        'payment',
+        'urlRedirect',
+        'urlPix'
     ],
     data() {
         return {
@@ -98,6 +104,8 @@ export default {
             chargeType: '',
             provider_id: '',
             payment_id: '',
+            urlRedirect: null,
+            urlPix: null,
             onLoad: false
         }
     },
@@ -117,6 +125,7 @@ export default {
          */
         saveSignature() {
             this.onLoad = true
+            var self = this;
 
             axios.post('/libs/provider/plan/updatePlan', {
                 plan_id: this.plan_id,
@@ -125,15 +134,31 @@ export default {
                 charge_type: this.chargeType
             })
             .then(response => {
-                this.onLoad = false
+                self.onLoad = false
                 jQuery("#myModal").modal("hide");
 
                 if (response.data.success) {
-                    this.$swal({
-                        type: 'success',
-                        title: 'OK!',
-                        text: response.data.message
-                    })
+                    if(response.data.pix) {
+                        this.$swal({
+                            type: 'success',
+                            title: 'OK!',
+                            text: response.data.message
+                        }).then(function (result) {
+                            if (result.value && response.data.pix) {
+                                self.pixPayment(response.data.transaction_db_id);
+                            }
+                        })
+                    } else {
+                        this.$swal({
+                            type: 'success',
+                            title: 'OK!',
+                            text: response.data.message
+                        }).then(function (result) {
+                            if (result.value && self.urlRedirect) {
+                                window.location.href = self.urlRedirect;
+                            }
+                        });
+                    }
                 } else {
                     this.$swal({
                         type: 'error',
@@ -143,7 +168,7 @@ export default {
                 }
             })
             .catch(error => {
-                this.onLoad = false
+                self.onLoad = false
                 jQuery("#myModal").modal("hide");
 
                 this.$swal({
@@ -152,12 +177,31 @@ export default {
                 })
                 console.log(error);
             })
+        },
+
+        /**
+        * Method to send pix data and go to screen payment pix
+        * @param pixData The pix data to send
+        */
+        pixPayment(transaction_id) {
+            if(!this.urlPix || !transaction_id) {
+                    this.$swal({
+                        type: 'error',
+                        title: 'Error!',
+                        text: 'Error pix url'
+                    });
+                return;
+            }
+
+            window.location.href = `${this.urlPix}?id=${transaction_id}`;
         }
     },
     created() {
         this.plan_id = this.plan.id 
         this.provider_id = this.provider.id
         this.allCards = this.payment
+        this.urlRedirect = this.urlRedirect ? this.urlRedirect : null;
+        this.urlPix = this.urlPix ? this.urlPix : null;
 
         this.$eventBus.$on('send-data', (data) => {
             this.allCards.push(data)

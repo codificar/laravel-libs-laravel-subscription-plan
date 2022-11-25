@@ -10,12 +10,48 @@
                 <div v-if="isValid.is_valid" class="actual-plan">
                     <div class="card-plan">
                         <h2>{{ this.trans('user_provider_web.actual_plan') + planValidName }}</h2>
-                        <p>{{ this.trans('user_provider_web.expiry_in') + isValid.next_expiration }}</p>
+                        <p>{{ this.trans('user_provider_web.expiry_in') + isValid.next_expiration_formated }}</p>
+                    
+                        <div class="container-status">
+                            <div>
+                                <p class="title">{{ this.trans('user_provider_web.status_payment') }}</p>
+                            </div>
+                            <div v-if="!isValid.isPaid">
+                                <span v-if="isValid.status == 'error' " class="span span-error">{{ this.trans('user_provider_web.status_error') }}</span>
+                                <span v-if="isValid.status == 'refused' "class="span span-error">{{ this.trans('user_provider_web.status_refused') }}</span>
+                                <span v-if="isValid.status == 'fail' "class="span span-error">{{ this.trans('user_provider_web.status_fail') }}</span>
+                                <span v-if="isValid.status == 'waiting_payment' "class="span span-waiting">{{ this.trans('user_provider_web.status_waiting') }}</span>
+                            </div>
+                            <div v-else>
+                                <span 
+                                    v-if="isValid.status == 'authorized' || isValid.status == 'paid' " 
+                                    class="span span-success">
+                                    {{ this.trans('user_provider_web.status_paid') }}
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                    <div
+                        class="container-link-payment" 
+                        v-if="isValid.pix && isValid.pix.isValid && isValid.status == 'waiting_payment' ">
+                        <a :href="`${this.urlPix}?id=${isValid.pix.transaction_id}`" target="__blank" class="link-payment">Clique aqui para realizar o pagamento</a>
+                    </div>
+                </div>
+                <div
+                    class="actual-plan" 
+                    v-if="!isValid.is_valid && isValid.signature_id">
+                    <p clas="title">{{ this.trans('user_provider_web.plan_expired') }}</p>
                 </div>
                 <div class="plans-grid">
                     <template v-if="planslist.length">
-                        <plans v-for="plan in planslist" :key="plan.id" :plans="plan" />
+                        <plans 
+                            v-if="plan.id != isValid.plan_id || 
+                                (isValid.status != 'paid' && 
+                                isValid.status != 'authorized' && 
+                                isValid.status != 'waiting_payment') " 
+                            v-for="plan in planslist" 
+                            :key="plan.id" 
+                            :plans="plan" />
                     </template>
                     <p v-else>{{ this.trans('user_provider_web.no_plans') }}</p>
                 </div>
@@ -31,7 +67,8 @@ import plans from "./Plans.vue";
 export default {
     props: [ 
         'planslist',
-        'validsignature'
+        'validsignature',
+        'urlPix'
     ],
     components: {
         plans
@@ -69,5 +106,58 @@ export default {
         display: flex;
         justify-content: center;
         flex-wrap: wrap;
+    }
+
+    .card-plan {
+        min-width: 260px;
+    }
+
+    .title {
+        font-size: 22px;
+        justify-content: center;
+        align-items: flex-start;
+        display: flex;
+        padding: 0;
+        margin: 0;
+    }
+
+    .link-payment {
+        text-decoration: none;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .container-status {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .span {
+        background-color: #8F8F8F;
+        color: #FFF;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-bottom: 2px;
+        padding-top: 2px;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    .span-success {
+        background-color: #149514 !important;
+    }
+
+    .span-error {
+        background-color: #dd1a1a !important;
+    }
+
+    .span-info {
+        background-color: #026ecb !important;
+    }
+
+    .span-waiting {
+        background-color: #eb7f0f !important;
     }
 </style>

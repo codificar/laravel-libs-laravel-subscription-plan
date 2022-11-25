@@ -3,6 +3,7 @@ namespace Codificar\LaravelSubscriptionPlan\Http\Controllers;
 
 use Codificar\LaravelSubscriptionPlan\Models\Plan;
 use Codificar\LaravelSubscriptionPlan\Models\Signature;
+use Codificar\LaravelSubscriptionPlan\Models\Transaction;
 
 use App\Http\Controllers\Controller;
 use Provider;
@@ -19,17 +20,39 @@ class WebProviderController extends Controller {
 		$actualSignature = $provider->signature_id;
 		
 		if ( $actualSignature ) {
-			$signature = subscriptionPlan::find($actualSignature);
+			$signature = Signature::find($actualSignature);
 			$now = strtotime(date('Y-m-d'));
 			$signatureNextExpiration = strtotime($signature->next_expiration);
+			$transactionSignature = Transaction::getSignatureTransaction($signature->id);
+			
+			$validSignature['isPaid'] = false;
+			$validSignature['isPix'] = false;
+			$validSignature['pix'] = array();
+			$validSignature['status'] = 'empty';
+			if($transactionSignature) {
+				$validSignature['status'] = $transactionSignature->getStatus();
+				$validSignature['isPaid'] = $transactionSignature->isPaid();
+				$validSignature['isPix'] = $transactionSignature->pix_base64 ? true : false;
+				
+				$expiredPix = strtotime($transactionSignature->pix_expiration_date_time);
+				$validSignature['pix']['isValid'] = false;
+				$validSignature['pix']['transaction_id'] = $transactionSignature->id;
+				if($now <= $expiredPix) {
+					$validSignature['pix']['isValid'] = true;
+				}
+				
+			}
 
 			if ($now <= $signatureNextExpiration) {
 				$validSignature['is_valid'] = true;
 				$validSignature['signature_id'] = $signature->id;
-				$validSignature['next_expiration'] = date('d/m/Y', $signatureNextExpiration);
+				$validSignature['next_expiration'] = date('Y-m-d', $signatureNextExpiration);
+				$validSignature['next_expiration_formated'] = date('d/m/Y', $signatureNextExpiration);
 				$validSignature['plan_id'] = $signature->plan_id;
 			} else {
 				$validSignature['is_valid'] = false;
+				$validSignature['signature_id'] = $signature->id;
+				$validSignature['plan_id'] = 0;	
 			}
 		}
 

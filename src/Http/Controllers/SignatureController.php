@@ -72,13 +72,17 @@ class SignatureController extends Controller
                 Carbon::now()->addDays(Settings::getBilletExpirationDays())->toIso8601String(),
                 Settings::getBilletInstructions()
             );
-        } else {
+        } else if($typeCharge == 'gatewayPix') {
+            $return = $gateway->pixCharge($value, $provider);
+        } 
+        else {
             $return = $gateway->charge($payment, $value, $description, true);
         }
 
         if (!$return['success']) {
             return [
                 'success' => false,
+                'pix' =>null,
                 'message' => trans('user_provider_web.payment_fail'),
                 'error' => trans('user_provider_web.payment_fail')
             ];
@@ -89,6 +93,19 @@ class SignatureController extends Controller
             'message' => trans('user_provider_web.signature_success')
         ];
 
+        $pix = null;
+        $pixBase64 = null;
+        $pixCopyPaste = null;
+        $pixExpirationDateTime = null;
+        if($typeCharge == 'gatewayPix') {
+            $pix = $return;
+            $pixBase64 = $pix['qr_code_base64'];
+            $pixCopyPaste = $pix['copy_and_paste'];
+            $pixExpirationDateTime = $pix['expiration_date_time'];
+            $data['message'] = trans('user_provider_web.pix_signature_success');
+        }
+        $data['pix'] = $pix;
+
         $billetUrl = array_key_exists('billet_url', $return) ? $return['billet_url'] : null;
 
         $transaction = Transaction::saveSignatureTransaction(
@@ -97,7 +114,11 @@ class SignatureController extends Controller
             $paymentTax, 
             $paymentFee, 
             $return["transaction_id"],
-            $billetUrl
+            $billetUrl,
+            $provider->ledger->id,
+            $pixBase64,
+            $pixCopyPaste,
+            $pixExpirationDateTime
         );
 
         $activity = 1;
@@ -105,6 +126,7 @@ class SignatureController extends Controller
         $provider->updateSignatureId($signature->id);
         $transaction->setSignatureId($signature->id);
         $data['signature_id'] = $signature->id;
+        $data['transaction_db_id'] = $transaction->id;
 
         if($billetUrl) {
             NewSubscriptionMail::dispatch($signature);

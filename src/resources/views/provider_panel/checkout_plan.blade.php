@@ -21,7 +21,9 @@
 	<checkout-plan 
 		:plan="{{ $plan }}" 
 		:payment="{{ $payment }}" 
-		:provider="{{ $provider }}">
+		:provider="{{ $provider }}"
+		:url-redirect="'{{ route('ProviderListPlans') }}'"
+		:url-pix="'{{ route('providerPixScreen') }}'">
 	</checkout-plan>
 </div>
 @endsection

@@ -302,5 +302,14 @@ return array(
 	'select_payment_method' => 'Selecione o metodo de pagamento',
     'credit_card'   		=> 'Cartão de crédito',
     'billet'        		=> 'Boleto',
-	'billet_obs'			=> 'Será cobrado R$ 1,00 a mais para gerar o boleto'
+	'direct_pix'			=> 'Pix',
+	'billet_obs'			=> 'Será cobrado R$ 1,00 a mais para gerar o boleto',
+	'pix_signature_success' => 'Plano solicitado, clique em ok para ir para o pagamento.',
+	'status_payment'		=> 'Status de pagamento: ',
+	'status_error'			=> 'Erro',
+	'status_refused'		=> 'Recusado',
+	'status_fail'			=> 'Falha',
+	'status_waiting'		=> 'Aguardando Pagamento',
+	'status_paid'			=> 'Pago',
+	'plan_expired'			=> 'Seu plano expirou',
 );

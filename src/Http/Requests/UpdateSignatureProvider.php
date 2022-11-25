@@ -29,7 +29,7 @@ class UpdateSignatureProvider extends FormRequest
     public function rules()
     {
         return [
-            'charge_type' => 'required|in:card,billet',
+            'charge_type' => 'required|in:card,billet,gatewayPix',
             'plan_id'   => 'required',
             'payment_id'=> 'required_if:charge_type,card',
             'plan' 	    => 'required',

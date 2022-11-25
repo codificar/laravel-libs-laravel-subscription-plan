@@ -303,5 +303,14 @@ return array(
 	'select_payment_method' => 'Seleccione el método de pago',
     'credit_card'   		=> 'Tarjeta de crédito',
     'billet'        		=> 'Boleto',
-	'billet_obs'			=> 'Se cobrará R$ 1,00 extra para generar el ticket'
+	'direct_pix'			=> 'Pix',
+	'billet_obs'			=> 'Se cobrará R$ 1,00 extra para generar el ticket',
+	'pix_signature_success' => 'Plan solicitado, haga clic en Aceptar para ir al pago.',
+	'status_payment'		=> 'Estado de pago: ',
+	'status_error'			=> 'Error',
+	'status_refused'		=> 'Rechazado',
+	'status_fail'			=> 'Falla',
+	'status_waiting'		=> 'En espera de pago',
+	'status_paid'			=> 'Pagado',
+	'plan_expired'			=> 'Su plan ha expirado',
 );
