@@ -306,10 +306,10 @@ export default {
                     <center>{{ signature.name }}</center>
                   </td>
                   <td>
-                    <center>{{ signature.created_at }}</center>
+                    <center>{{ signature.created_at_formated || signature.created_at }}</center>
                   </td>
                   <td>
-                    <center>{{ signature.next_expiration }}</center>
+                    <center>{{ signature.next_expiration_formated || signature.next_expiration }}</center>
                   </td>
                   <td>
                     <center>{{ signature.plan_price }}</center>

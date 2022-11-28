@@ -18,6 +18,26 @@ class Signature extends Model
 	 * @var string
 	 */
 	protected $table = 'signature';
+		
+	protected $appends = ['next_expiration_formated', 'created_at_formated'];
+	
+	/** 
+	 * Function to get the next_expiration attribute formated
+	 * @return string
+	 */
+	public function getNextExpirationFormatedAttribute()
+	{
+		return date("d/m/Y H:i:s", strtotime($this->next_expiration));	
+	}
+	
+	/** 
+	 * Function to get the created_at_formated attribute formated
+	 * @return string
+	 */
+	public function getCreatedAtFormatedAttribute()
+	{
+		return date("d/m/Y H:i:s", strtotime($this->created_at));	
+	}
 	
 	/**
 	 * Indicates if the model should be timestamped.
@@ -86,8 +106,7 @@ class Signature extends Model
 
 	public static function getList(){
 
-		$signature = DB::table('signature')
-		->leftJoin('plan', 'signature.plan_id', '=', 'plan.id')
+		$signature = Signature::leftJoin('plan', 'signature.plan_id', '=', 'plan.id')
 		->leftJoin('provider', 'signature.provider_id', '=', 'provider.id')
 		->groupBy('signature.id')
 		->select('signature.id', 'plan.name as name', 'signature.created_at', 'signature.next_expiration', 'plan.plan_price as plan_price', 
@@ -188,13 +207,10 @@ class Signature extends Model
 	 */
 	public static function updateProviderSignature($id, $providerId, $planId, $nextExpiration, $transactionId = null, $activity, $chargeType, $payment = null) {
 		try {
-			$signature = self::find($id);
+			$signature = new Signature;
 
-			if (!$signature) {
-				$signature = new Signature;
-
-				if ($chargeType == 'billet')
-					$activity = 0;
+			if ($chargeType == 'billet' || $chargeType == 'gatewayPix') {
+				$activity = 0;
 			}
 				
 			$signature->provider_id = $providerId;

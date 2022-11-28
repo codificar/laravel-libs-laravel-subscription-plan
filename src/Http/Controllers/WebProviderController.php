@@ -21,7 +21,7 @@ class WebProviderController extends Controller {
 		
 		if ( $actualSignature ) {
 			$signature = Signature::find($actualSignature);
-			$now = strtotime(date('Y-m-d'));
+			$now = strtotime(date('Y-m-d H:i:s'));
 			$signatureNextExpiration = strtotime($signature->next_expiration);
 			$transactionSignature = Transaction::getSignatureTransaction($signature->id);
 			
@@ -42,12 +42,14 @@ class WebProviderController extends Controller {
 				}
 				
 			}
+			
+			$validSignature['activity'] = filter_var($signature->activity, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
 			if ($now <= $signatureNextExpiration) {
 				$validSignature['is_valid'] = true;
 				$validSignature['signature_id'] = $signature->id;
-				$validSignature['next_expiration'] = date('Y-m-d', $signatureNextExpiration);
-				$validSignature['next_expiration_formated'] = date('d/m/Y', $signatureNextExpiration);
+				$validSignature['next_expiration'] = date('Y-m-d H:i', $signatureNextExpiration);
+				$validSignature['next_expiration_formated'] = date('d/m/Y H:i', $signatureNextExpiration);
 				$validSignature['plan_id'] = $signature->plan_id;
 			} else {
 				$validSignature['is_valid'] = false;

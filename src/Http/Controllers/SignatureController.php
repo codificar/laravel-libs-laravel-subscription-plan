@@ -83,14 +83,14 @@ class SignatureController extends Controller
             return [
                 'success' => false,
                 'pix' =>null,
-                'message' => trans('user_provider_web.payment_fail'),
-                'error' => trans('user_provider_web.payment_fail')
+                'message' => trans('subscriptionPlan::user_provider_web.payment_fail'),
+                'error' => trans('subscriptionPlan::user_provider_web.payment_fail')
             ];
         }
 
         $data = [
             'success' => true,
-            'message' => trans('user_provider_web.signature_success')
+            'message' => trans('subscriptionPlan::user_provider_web.signature_success')
         ];
 
         $pix = null;
@@ -102,7 +102,7 @@ class SignatureController extends Controller
             $pixBase64 = $pix['qr_code_base64'];
             $pixCopyPaste = $pix['copy_and_paste'];
             $pixExpirationDateTime = $pix['expiration_date_time'];
-            $data['message'] = trans('user_provider_web.pix_signature_success');
+            $data['message'] = trans('subscriptionPlan::user_provider_web.pix_signature_success');
         }
         $data['pix'] = $pix;
 

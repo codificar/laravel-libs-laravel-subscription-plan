@@ -10,11 +10,26 @@
                 <div v-if="isValid.is_valid" class="actual-plan">
                     <div class="card-plan">
                         <h2>{{ this.trans('user_provider_web.actual_plan') + planValidName }}</h2>
-                        <p>{{ this.trans('user_provider_web.expiry_in') + isValid.next_expiration_formated }}</p>
+                        <p class="text-muted sub-title">{{ this.trans('user_provider_web.expiry_in') + isValid.next_expiration_formated }}</p>
                     
                         <div class="container-status">
                             <div>
-                                <p class="title">{{ this.trans('user_provider_web.status_payment') }}</p>
+                                <p class="title">{{ this.trans('user_provider_web.status_plan') }}</p>
+                            </div>
+                            <div v-if="!isValid.activity">
+                                <span class="span span-error">{{ this.trans('user_provider_web.no_active') }}</span>
+                            </div>
+                            <div v-else>
+                                <span 
+                                    v-if="isValid.activity" 
+                                    class="span span-success">
+                                    {{ this.trans('user_provider_web.active') }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="container">
+                            <div>
+                                <p class="title status">{{ this.trans('user_provider_web.status_payment') }}</p>
                             </div>
                             <div v-if="!isValid.isPaid">
                                 <span v-if="isValid.status == 'error' " class="span span-error">{{ this.trans('user_provider_web.status_error') }}</span>
@@ -109,16 +124,19 @@ export default {
     }
 
     .card-plan {
-        min-width: 260px;
+        min-width: 300px;
     }
 
     .title {
         font-size: 22px;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: flex-start;
         display: flex;
         padding: 0;
         margin: 0;
+    }
+    .sub-title {
+        font-size: 12px;
     }
 
     .link-payment {
