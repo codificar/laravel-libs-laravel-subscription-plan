@@ -44,6 +44,14 @@ class SubscriptionDetailResource extends JsonResource
         $nextExp = $this['signature']['next_expiration'];
         $goodToCancel = Carbon::parse($nextExp);
         $goodToCancel = $goodToCancel->subDays(Settings::getBilletExpirationDays())->toDateString();
+        
+        $now = strtotime(date('Y-m-d H:i:s'));
+        $signatureNextExpiration = strtotime($this['signature']->next_expiration);
+
+        $expired = false;
+        if ($now > $signatureNextExpiration) {
+            $expired = true;
+        }
 
         return [
             'success' => true,
@@ -55,7 +63,8 @@ class SubscriptionDetailResource extends JsonResource
             'is_active' => $this['signature']->activity,
             'is_cancelled' => $this['signature']->is_cancelled,
             'paid_status' => $this['transaction']->status,
-            'billet_link' => $this['transaction']->billet_link
+            'billet_link' => $this['transaction']->billet_link,
+            'expired' => $expired
         ];
     }
 }

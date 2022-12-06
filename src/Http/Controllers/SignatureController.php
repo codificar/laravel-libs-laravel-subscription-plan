@@ -19,7 +19,7 @@ use Codificar\LaravelSubscriptionPlan\Jobs\NewSubscriptionMail;
 use Artisan;
 use Carbon\Carbon;
 use Finance;
-use PaymentFactory;
+use Codificar\PaymentGateways\Libs\PaymentFactory;
 
 class SignatureController extends Controller
 {
@@ -73,17 +73,27 @@ class SignatureController extends Controller
                 Settings::getBilletInstructions()
             );
         } else if($typeCharge == 'gatewayPix') {
+            $gateway = PaymentFactory::createPixGateway();
             $return = $gateway->pixCharge($value, $provider);
         } 
         else {
             $return = $gateway->charge($payment, $value, $description, true);
         }
 
-        if (!$return['success']) {
+        if ($return && !$return['success']) {
+            $message = trans('subscriptionPlan::user_provider_web.payment_fail');
+            if($return['message']) {
+                $message = $return['message'];
+            } 
+
+            if($return['original_message']) {
+                $message = $return['original_message'];
+            }
+
             return [
                 'success' => false,
                 'pix' =>null,
-                'message' => trans('subscriptionPlan::user_provider_web.payment_fail'),
+                'message' => $message,
                 'error' => trans('subscriptionPlan::user_provider_web.payment_fail')
             ];
         }
