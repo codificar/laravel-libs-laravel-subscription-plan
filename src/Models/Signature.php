@@ -103,6 +103,22 @@ class Signature extends Model
 
 		return $return;
 	}
+		
+	/**
+	 * get provider signature active by provider_id
+	 * @param int $provider
+	 * 
+	 * @return Provider
+	 */
+	public static function getActiveProviderSignature($providerId)
+	{
+		$return = self::where(['activity' => 1])
+			->where(['is_cancelled' => 0])
+			->where(['provider_id' => $providerId])
+			->first();
+
+		return $return;
+	}
 
 	public static function getList(){
 
@@ -215,7 +231,7 @@ class Signature extends Model
 				
 			$signature->provider_id = $providerId;
 			$signature->plan_id = $planId;
-			$signature->next_expiration  = $nextExpiration;
+			$signature->next_expiration  = $nextExpiration->toDateTimeString();
 			$signature->finance_id  = null;
 			$signature->transaction_id  = $transactionId;
 			$signature->activity = $activity;

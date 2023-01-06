@@ -134,20 +134,26 @@ class Plan extends Model
 
 	/**
      * Retorna a lista de planos disponíveis para o provider
+	 * @param int $locationId
+	 * @param int $providerId
+	 * 
+	 * @return json {success: bool, plans:[]} 
      */
-	public static function getPlansListForProvider ($locationId)
+	public static function getPlansListForProvider($locationId, $providerId)
 	{
+		$providerSignature = Signature::getActiveProviderSignature($providerId);
 		$plans = self::where('client', 'Provider')->where('visibility', 1)->get();
 
 		$return = [];
-
 		for ($i=0; $i < count($plans); $i++) { 
-			$plans[$i]->plan_price = currency_format($plans[$i]->plan_price);
+			if(!$providerSignature || ($providerSignature && $plans[$i]->id != $providerSignature->plan_id)) {
+				$plans[$i]->plan_price = currency_format($plans[$i]->plan_price);
 
-			if ($plans[$i]->location != null && $locationId != $plans[$i]->location)
-				continue;
+				if ($plans[$i]->location != null && $locationId != $plans[$i]->location)
+					continue;
 
-			array_push($return, $plans[$i]);
+				array_push($return, $plans[$i]);
+			}
 		}
 		
 		return $return;

@@ -116,7 +116,7 @@ class PlanController extends Controller
         $provider = Provider::find($request->id);
 
         if($provider)
-            $plans = Plan::getPlansListForProvider($provider->location_id);
+            $plans = Plan::getPlansListForProvider($provider->location_id, $provider->id);
 
         return response()->json(['success' => true, 'plans' => $plans]);
     }
