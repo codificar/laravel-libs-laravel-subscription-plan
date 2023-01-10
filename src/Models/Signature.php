@@ -309,4 +309,30 @@ class Signature extends Model
             ->get();
 	}
 
+	
+	/**
+	 * Update all signature expired
+	 * @return void
+	 */
+	public static function updateSignatures()
+	{
+		$now = date('Y-m-d H:i:s');
+		$signatures = Signature::select(['signature.*'])
+			->join('plan', 'signature.plan_id', '=', 'plan.id')
+			->where('signature.next_expiration', '<', $now)
+			->where(['plan.allow_cancelation' => 1])
+			->where(['signature.activity' => 1])
+			->where(['signature.is_cancelled' => 0])
+			->with('plan')
+			->get();
+
+		foreach ($signatures as $key => $signature) {
+			$signature->activity = 0;
+			$signature->is_cancelled = 1;
+			$signature->save();
+		}
+			
+			
+	}
+
 }
