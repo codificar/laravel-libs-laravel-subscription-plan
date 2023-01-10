@@ -50,8 +50,9 @@ class UpdateSignatureProvider extends FormRequest
         $this->payment = Payment::find($this->payment_id);
         $this->provider = Provider::find($this->provider_id);
 
-        if (!$this->payment || $this->payment->provider_id != $this->provider->id)
+        if (!$this->payment || $this->payment->provider_id != $this->provider->id) {
             $this->payment = null;
+        }
 
         $actualSubscription = $this->provider->signature;
 

@@ -247,6 +247,7 @@ class Signature extends Model
 				$signature->check_billet_at = $checkAt->format('Y-m-d');
 			}
 
+			$signature->deactiveProviderSignatures($providerId);
 			$signature->save();
 			return $signature;
 		} catch (\Exception $e) {
@@ -262,6 +263,16 @@ class Signature extends Model
 	public static function getByTransactionId($transactionId)
 	{
 		return self::where('transaction_id', $transactionId)->first();
+	}
+	/**
+	 * atualizar outras assinaturas do provider como inativo
+	 * @param int $transactionId
+	 * @return array
+	 */
+	public static function deactiveProviderSignatures($providerId)
+	{
+		return self::where('provider_id', $providerId)
+			->update(['activity' => 0]);
 	}
 
 	/**

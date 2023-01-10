@@ -86,7 +86,7 @@ class SignatureController extends Controller
                 $message = $return['message'];
             } 
 
-            if($return['original_message']) {
+            if(isset($return['original_message'])) {
                 $message = $return['original_message'];
             }
 
