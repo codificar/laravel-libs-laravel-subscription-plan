@@ -37,7 +37,6 @@ class SignatureController extends Controller
         $typeCharge = $request->charge_type;
 
         $requestSubscriptionCharge = $this->RequestSubscriptionCharge($plan, $provider, $payment, $typeCharge);
-
         return new UpdatePlanResource($requestSubscriptionCharge);
     }
 
@@ -54,7 +53,6 @@ class SignatureController extends Controller
         $gateway        = PaymentFactory::createGateway();
         $paymentTax     = $gateway->getGatewayTax();
         $paymentFee     = $gateway->getGatewayFee();
-
         // Define a data de expiração da assinatura
         $period = $plan->period;
         if ($recurrence) {
@@ -81,9 +79,9 @@ class SignatureController extends Controller
         }
 
         if ($return && !$return['success']) {
-            $message = trans('subscriptionPlan::user_provider_web.payment_fail');
-            if($return['message']) {
-                $message = $return['message'];
+            $message = trans('user_provider_web.payment_fail');
+            if($return['error']['messages']) {
+                $message = $return['error']['messages'];
             } 
 
             if(isset($return['original_message'])) {
@@ -94,13 +92,13 @@ class SignatureController extends Controller
                 'success' => false,
                 'pix' =>null,
                 'message' => $message,
-                'error' => trans('subscriptionPlan::user_provider_web.payment_fail')
+                'error' => trans('user_provider_web.payment_fail')
             ];
         }
 
         $data = [
             'success' => true,
-            'message' => trans('subscriptionPlan::user_provider_web.signature_success')
+            'message' => trans('user_provider_web.signature_success')
         ];
 
         $pix = null;
@@ -112,7 +110,7 @@ class SignatureController extends Controller
             $pixBase64 = $pix['qr_code_base64'];
             $pixCopyPaste = $pix['copy_and_paste'];
             $pixExpirationDateTime = $pix['expiration_date_time'];
-            $data['message'] = trans('subscriptionPlan::user_provider_web.pix_signature_success');
+            $data['message'] = trans('user_provider_web.pix_signature_success');
         }
         $data['pix'] = $pix;
 
