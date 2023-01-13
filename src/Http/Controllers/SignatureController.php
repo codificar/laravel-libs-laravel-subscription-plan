@@ -80,12 +80,12 @@ class SignatureController extends Controller
 
         if ($return && !$return['success']) {
             $message = trans('user_provider_web.payment_fail');
-            if($return['error']['messages']) {
-                $message = $return['error']['messages'];
+            if($return['message']) {
+                $message = $return['message'];
             } 
 
             if(isset($return['original_message'])) {
-                $message = $return['original_message'];
+                $message = $return['message'];
             }
 
             return [
