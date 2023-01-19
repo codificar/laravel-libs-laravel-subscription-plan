@@ -77,13 +77,15 @@ class SignatureController extends Controller
         else {
             $return = $gateway->charge($payment, $value, $description, true);
         }
-        
         if ($return && !$return['success']) {
             $message = trans('user_provider_web.payment_fail');
-            
-            if($return['error']['messages']) {
+           
+            if(isset($return['error']['messages'])) {
                 $message = $return['error']['messages'];
             } 
+            if( isset($return['messages']) ){
+                $message = $return['messages'];
+            }
 
             if(isset($return['original_message'])) {
                 $message = $return['message'];
