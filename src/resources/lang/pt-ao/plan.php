@@ -46,4 +46,7 @@ return array(
     'action'                    => 'Ações',
     'edit'                      =>  'Editar', 
     'delete'                    =>  'Deletar', 
+    'yes'                       =>  'Sim',
+    'no'                        =>  'Não',
+    'success_delete'            =>  'Plano deletado com sucesso',
 );
