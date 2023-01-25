@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
 use Carbon\Carbon;
 use Codificar\LaravelSubscriptionPlan\Models\Plan, App\Models\Provider as Provider ;
-use Nette\Utils\DateTime;
 class Signature extends Model
 {
     //
@@ -295,8 +294,6 @@ class Signature extends Model
 	public function cancel()
 	{
 		try {
-			$deleted_at = new DateTime('now');
-			$this->deleted_at = $deleted_at;
 			$this->payment_id = null;
 			$this->is_cancelled = true;
 			$this->activity = false;
