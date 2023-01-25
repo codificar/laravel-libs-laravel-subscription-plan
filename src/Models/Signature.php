@@ -132,6 +132,15 @@ class Signature extends Model
 		return $signature;
 	}
 
+	public static function getListByPlanId($id){
+
+		$signature = Signature::select(['signature.*'])
+		->where(['plan_id' => $id])
+		->get();
+
+		return $signature;
+	}
+
 	public function querySearch(Request $request)
 	{
 		// get query parameters

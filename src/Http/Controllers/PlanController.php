@@ -7,6 +7,7 @@ use Codificar\LaravelSubscriptionPlan\Http\Requests\UpdateSignatureProvider;
 use Codificar\LaravelSubscriptionPlan\Http\Resources\UpdatePlanResource;
 
 use Carbon\Carbon;
+use Codificar\LaravelSubscriptionPlan\Models\Signature;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
@@ -87,8 +88,22 @@ class PlanController extends Controller
     }
     
     public function destroy($id){
-        if (Plan::find($id)->delete()){
-            return "success";
+        $plan = Plan::find($id);
+        if ($plan){
+            try {
+                $list = Signature::getListByPlanId($id);
+                foreach ($list as $key => $list) {
+                    if ($list->activity && !$list->is_cancelled ){
+                        $list->cancel();
+                        $provider = Provider::find($list->provider_id);
+                        $provider->updateSignatureId(null);
+                    }
+                }
+                $plan->delete();
+                return "success";
+            }catch (\Exception $e) {
+                return "failed";
+            }
         }else{
             return "failed";
         }
