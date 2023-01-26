@@ -36,7 +36,10 @@ class SignatureController extends Controller
         $payment    = $request->payment;
         $typeCharge = $request->charge_type;
 
-        $requestSubscriptionCharge = $this->RequestSubscriptionCharge($plan, $provider, $payment, $typeCharge);
+        $hasSignature = Signature::getActiveProviderSignature($provider->id);
+        $recurrence = $hasSignature ? true : false;
+
+        $requestSubscriptionCharge = $this->RequestSubscriptionCharge($plan, $provider, $payment, $typeCharge, $recurrence);
         return new UpdatePlanResource($requestSubscriptionCharge);
     }
 

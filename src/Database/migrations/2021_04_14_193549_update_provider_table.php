@@ -15,7 +15,9 @@ class UpdateProviderTable extends Migration
     {
         Schema::table('provider', function (Blueprint $table) {
             //
-            $table->integer('signature_id')->nullable();
+            if (Schema::hasColumn('provider', 'signature_id')) {
+                $table->integer('signature_id')->nullable()->change();
+            }
         });
     }
 
@@ -28,7 +30,9 @@ class UpdateProviderTable extends Migration
     {
         Schema::table('provider', function (Blueprint $table) {
             //
-            $table->integer('signature_id');
+            if (!Schema::hasColumn('provider', 'signature_id')) {
+                $table->integer('signature_id')->change();
+            }
         });
     }
 }
