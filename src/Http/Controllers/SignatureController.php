@@ -94,6 +94,7 @@ class SignatureController extends Controller
             return [
                 'success' => false,
                 'pix' =>null,
+                'charge_type'=>$typeCharge,
                 'message' => $message,
                 'error' => trans('user_provider_web.payment_fail')
             ];
@@ -138,6 +139,7 @@ class SignatureController extends Controller
         $transaction->setSignatureId($signature->id);
         $data['signature_id'] = $signature->id;
         $data['transaction_db_id'] = $transaction->id;
+        $data['charge_type'] = $typeCharge;
 
         if($billetUrl) {
             NewSubscriptionMail::dispatch($signature);
