@@ -17,10 +17,9 @@ class WebProviderController extends Controller {
 		$plans = Plan::where('client', 'Provider')->where('visibility', 1)->get();
 		$provider = Provider::find(\Auth::guard("providers")->user()->id);
 		$validSignature = [];
-		$actualSignature = $provider->signature_id;
+		$signature = $provider->signature;
 		
-		if ( $actualSignature ) {
-			$signature = Signature::find($actualSignature);
+		if ( $signature ) {
 			$now = strtotime(date('Y-m-d H:i:s'));
 			$signatureNextExpiration = strtotime($signature->next_expiration);
 			$transactionSignature = Transaction::getSignatureTransaction($signature->id);
