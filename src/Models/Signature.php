@@ -332,11 +332,12 @@ class Signature extends Model
 	
 	/**
 	 * Update all signature expired
-	 * @return void
+	 * @return array
 	 */
 	public static function updateSignatures()
 	{
 		$now = date('Y-m-d H:i:s');
+		$updated = false;
 		$signatures = Signature::select(['signature.*'])
 			->join('plan', 'signature.plan_id', '=', 'plan.id')
 			->where('signature.next_expiration', '<', $now)
@@ -346,13 +347,18 @@ class Signature extends Model
 			->with('plan')
 			->get();
 
+		$total = count($signatures);
 		foreach ($signatures as $key => $signature) {
 			$signature->activity = 0;
 			$signature->is_cancelled = 1;
 			$signature->save();
+			$updated = true;
 		}
-			
-			
+
+		return [
+			"updated" => $updated,
+			"total_updated" => $total
+		];
 	}
 
 }

@@ -39,6 +39,12 @@ class UpdateSignaturesJob extends Command
      */
     public function handle()
     {
-        Signature::updateSignatures();
+        $this->info("Search Signatures to cancel");
+        $signatures = Signature::updateSignatures();
+        if($signatures['updated']) {
+            $this->info(" - Total signatures updated: " . $signatures['total_updated']);
+        } else {
+            $this->info("- Doesn't have signatures to update");
+        }
     }
 }
