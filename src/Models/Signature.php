@@ -341,12 +341,8 @@ class Signature extends Model
 		$total = 0;
 		try {
 			$signatures = Signature::select(['signature.*'])
-				->join('plan', 'signature.plan_id', '=', 'plan.id')
 				->where('signature.next_expiration', '<', $now)
-				->where(['plan.allow_cancelation' => 1])
-				->where(['signature.activity' => 1])
 				->where(['signature.is_cancelled' => 0])
-				->with('plan')
 				->get();
 	
 			$total = count($signatures);
