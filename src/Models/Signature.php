@@ -338,21 +338,26 @@ class Signature extends Model
 	{
 		$now = date('Y-m-d H:i:s');
 		$updated = false;
-		$signatures = Signature::select(['signature.*'])
-			->join('plan', 'signature.plan_id', '=', 'plan.id')
-			->where('signature.next_expiration', '<', $now)
-			->where(['plan.allow_cancelation' => 1])
-			->where(['signature.activity' => 1])
-			->where(['signature.is_cancelled' => 0])
-			->with('plan')
-			->get();
-
-		$total = count($signatures);
-		foreach ($signatures as $key => $signature) {
-			$signature->activity = 0;
-			$signature->is_cancelled = 1;
-			$signature->save();
-			$updated = true;
+		$total = 0;
+		try {
+			$signatures = Signature::select(['signature.*'])
+				->join('plan', 'signature.plan_id', '=', 'plan.id')
+				->where('signature.next_expiration', '<', $now)
+				->where(['plan.allow_cancelation' => 1])
+				->where(['signature.activity' => 1])
+				->where(['signature.is_cancelled' => 0])
+				->with('plan')
+				->get();
+	
+			$total = count($signatures);
+			foreach ($signatures as $signature) {
+				$signature->activity = 0;
+				$signature->is_cancelled = 1;
+				$signature->save();
+				$updated = true;
+			}
+		} catch(\Exception $e) {
+			\Log::error($e->getMessage() . $e->getTraceAsString());
 		}
 
 		return [
