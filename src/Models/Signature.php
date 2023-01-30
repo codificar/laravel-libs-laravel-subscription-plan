@@ -125,7 +125,7 @@ class Signature extends Model
 		->leftJoin('provider', 'signature.provider_id', '=', 'provider.id')
 		->groupBy('signature.id')
 		->select('signature.id', 'plan.name as name', 'signature.created_at', 'signature.next_expiration', 'plan.plan_price as plan_price', 
-		'provider.first_name as first_name', 'signature.activity')
+		'provider.first_name as first_name', 'signature.activity', 'signature.is_cancelled')
 		->orderBy('signature.id')
 		->paginate(10);
 

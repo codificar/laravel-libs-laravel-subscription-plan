@@ -2,11 +2,11 @@
 import axios from "axios";
 
 export default {
-  props: ["EditPermission", "DeletePermission", "Signatures"],
+  props: ["EditPermission", "DeletePermission", "Signatures", "CurrencySymbol"],
   data() {
     return {
       signatures: [],
-
+      currency: '$',
       signature_filter: {
         id: "",
         name: "",
@@ -85,6 +85,14 @@ export default {
       this.signature_filter.id = "";
       this.signature_filter.quantity_signatures = "";
     },
+    formatCurrency(value) {
+      if (value != undefined || value != "") {                
+          let val = (value/1).toFixed(2).replace('.', ',')
+          return this.currency + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      } else {
+          return "";
+      }
+    },
     deletePlan(id, name) {
       this.$swal({
         title:
@@ -122,6 +130,10 @@ export default {
   },
   created() {
     this.signatures = JSON.parse(this.Signatures);
+    console.log(this.CurrencySymbol);
+    if(this.CurrencySymbol) {
+      this.currency = this.CurrencySymbol;
+    }
     // this.fetch();
   }
 };
@@ -295,6 +307,9 @@ export default {
                 <center>{{trans('signature.situation')}}</center>
               </th>
               <th>
+                <center>{{trans('signature.signature_cancelation')}}</center>
+              </th>
+              <th>
                 <center>{{trans('signature.action')}}</center>
               </th>
               <tbody>
@@ -312,7 +327,7 @@ export default {
                     <center>{{ signature.next_expiration_formated || signature.next_expiration }}</center>
                   </td>
                   <td>
-                    <center>{{ signature.plan_price }}</center>
+                    <center>{{ formatCurrency(signature.plan_price) }}</center>
                   </td>
                   <td>
                     <center>{{ signature.first_name }}</center>
@@ -327,6 +342,19 @@ export default {
                         v-if="signature.activity == 0"
                         class="btn btn-danger peq"
                       >{{trans('signature.inactive') }}</span>
+                    </center>
+                    <!-- <center>{{ signature.activity }}</center> -->
+                  </td>
+                  <td>
+                    <center>
+                      <span
+                        v-if="signature.is_cancelled == 0"
+                        class="btn btn-success peq"
+                      >{{trans('signature.no') }}</span>
+                      <span
+                        v-if="signature.is_cancelled == 1"
+                        class="btn btn-danger peq"
+                      >{{trans('signature.yes') }}</span>
                     </center>
                     <!-- <center>{{ signature.activity }}</center> -->
                   </td>

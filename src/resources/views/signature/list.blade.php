@@ -18,7 +18,8 @@
         signatures = "{{ $signatures }}"
         suspendOrActivate="{{ AuthUtils::hasPermissionByUrl('AdminUserEdit') }}"
         edit-permission="{{ AuthUtils::hasPermissionByUrl('AdminUserEdit') }}"
-        delete-permission="{{ AuthUtils::hasPermissionByUrl('AdminDeleteUser') }}">
+        delete-permission="{{ AuthUtils::hasPermissionByUrl('AdminDeleteUser') }}"
+        currency-symbol={{ \Settings::getFormattedCurrency()}}>
     </signature-list>
 </div>
 @endsection

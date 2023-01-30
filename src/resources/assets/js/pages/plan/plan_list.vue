@@ -150,7 +150,7 @@
                     <center>{{ plan.name }}</center>
                   </td>
                   <td>
-                    <center>{{ plan.plan_price }}</center>
+                    <center>{{ formatCurrency(plan.plan_price) }}</center>
                   </td>
                   <td>
                     <center>{{ plan.validity}}</center>
@@ -214,10 +214,11 @@
 import axios from "axios";
 
 export default {
-  props: ["EditPermission", "DeletePermission", "Plans"],
+  props: ["EditPermission", "DeletePermission", "Plans", "CurrencySymbol"],
   data() {
     return {
       plans: [],
+      currency: '$',
       qtd: [],
       plan_filter: {
         name: "",
@@ -261,6 +262,14 @@ export default {
       this.plan_filter.id = "";
       this.plan_filter.quantity_signatures = "";
     },
+    formatCurrency(value) {
+      if (value != undefined || value != "") {                
+          let val = (value/1).toFixed(2).replace('.', ',')
+          return this.currency + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      } else {
+          return "";
+      }
+    },
     deletePlan(id, name) {
       this.$swal({
         title: this.trans("plan.plan_delete_confirm") + " " + name + "?",
@@ -297,6 +306,9 @@ export default {
   },
   created() {
     this.plans = JSON.parse(this.Plans);
+    if(this.CurrencySymbol) {
+      this.currency = this.CurrencySymbol;
+    }
     // this.fetch();
   }
 };
