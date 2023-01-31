@@ -18,7 +18,7 @@ class Signature extends Model
 	 */
 	protected $table = 'signature';
 		
-	protected $appends = ['next_expiration_formated', 'created_at_formated'];
+	protected $appends = ['next_expiration_formated', 'created_at_formated', 'good_to_cancel_date', 'is_expired'];
 	
 	/** 
 	 * Function to get the next_expiration attribute formated
@@ -119,6 +119,28 @@ class Signature extends Model
 
 		return $return;
 	}
+
+	/**
+	* Método que retorna a data de melhor dia de cancelamento
+	* @return string
+	*/
+    public function getGoodToCancelDateAttribute()
+    {		
+        $goodToCancel = \Carbon::parse($this->next_expiration);
+        $goodToCancel = $goodToCancel->subDays(Settings::getBilletExpirationDays())->toDateString();
+		return date('d/m/Y', strtotime($goodToCancel));
+    }
+
+	/**
+	* Método se está ou não expirado
+	* @return string
+	*/
+    public function getIsExpiredAttribute()
+    {
+		$now = strtotime(date('Y-m-d H:i:s'));
+        $signatureNextExpiration = strtotime($this->next_expiration);
+		return $now > $signatureNextExpiration;
+    }
 
 	/**
 	 * get list of signatures
