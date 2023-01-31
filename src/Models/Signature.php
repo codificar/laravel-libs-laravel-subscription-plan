@@ -383,29 +383,20 @@ class Signature extends Model
 	public static function updateSignatures()
 	{
 		$now = date('Y-m-d H:i:s');
-		$updated = false;
-		$total = 0;
 		try {
-			$signatures = Signature::select(['signature.*'])
+			Signature::select(['signature.*'])
 				->where('signature.next_expiration', '<', $now)
 				->where(['signature.is_cancelled' => 0])
-				->get();
-	
-			$total = count($signatures);
-			foreach ($signatures as $signature) {
-				$signature->activity = 0;
-				$signature->is_cancelled = 1;
-				$signature->save();
-				$updated = true;
-			}
+				->join('provider','signature.provider_id', '=', 'provider.id')
+				->update([
+					'signature.activity' => false,
+					'signature.is_cancelled' => true,
+					'signature.payment_id' => null,
+					'provider.signature_id' => null
+				]);
 		} catch(\Exception $e) {
 			\Log::error($e->getMessage() . $e->getTraceAsString());
 		}
-
-		return [
-			"updated" => $updated,
-			"total_updated" => $total
-		];
 	}
 
 }
