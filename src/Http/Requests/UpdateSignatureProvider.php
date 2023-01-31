@@ -69,16 +69,16 @@ class UpdateSignatureProvider extends FormRequest
     }
 
     /**
-     * Caso a validação falhe, retorna os itens de erro
+     * If the validation fails, it returns the error items
      * 
      * @return Json
      */
     protected function failedValidation(Validator $validator) 
     {   
-        // Pega as mensagens de erro     
+        // Get error messages     
         $error_messages = $validator->errors()->all();
 
-        // Exibe os parâmetros de erro
+        // Displays error parameters
         throw new HttpResponseException(
         response()->json(
             [

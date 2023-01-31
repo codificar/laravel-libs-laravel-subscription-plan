@@ -37,7 +37,8 @@ class Transaction extends TransactionProject
 	);
 
 	/**
-	 * Salva uma transação referente a assinatura
+	 * Save a transaction
+	 * 
 	 * @param string $status
 	 * @param float $planPrice
 	 * @param float $paymentTax
@@ -81,7 +82,8 @@ class Transaction extends TransactionProject
 	}
 
 	/**
-	 * Retorna os dados de transação da assinatura
+	 * Returns subscription transaction data
+	 * 
 	 * @param $signatureId id da assinatura
 	 * @return Transaction|null  
 	 */
@@ -92,7 +94,8 @@ class Transaction extends TransactionProject
 	}
 
 	/**
-	 * Retorna o status da transação
+	 * Returns the status of the transaction
+	 * 
 	 * @return String status da transação
 	 */
 	public function getStatus()
@@ -101,7 +104,8 @@ class Transaction extends TransactionProject
 	}
 
 	/**
-	 * Retorna se o status da transação foi pago
+	 * Returns whether the transaction status has been paid
+	 * 
 	 * @return boolean 
 	 */
 	public function isPaid()
@@ -110,7 +114,8 @@ class Transaction extends TransactionProject
 	}
 
 	/**
-	 * Retorna se o status da transação houve falha
+	 * Returns if transaction status failed
+	 * 
 	 * @return boolean 
 	 */
 	public function isFail()
@@ -119,7 +124,8 @@ class Transaction extends TransactionProject
 	}
 
 	/**
-	 * Adiciona o id da assinatura
+	 * Add Subscription ID
+	 * 
 	 * @param int $id id da assinatura
 	 * @return void
 	 */

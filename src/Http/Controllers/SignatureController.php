@@ -24,10 +24,11 @@ use Codificar\PaymentGateways\Libs\PaymentFactory;
 class SignatureController extends Controller
 {
     /**
-     * Gera uma assinatura caso gateway->charge() retorne success atualizando
-     * a coluna signature_id na tabela provider com o id da assinatura gerada
-     *    
-     * @return json object com a resposta success true ou false 
+     * Generate a signature if gateway->charge() returns success updating
+     * the signature_id column in the provider table with the id of the generated signature
+     *
+     * @param UpdateSignatureProvider $request
+     * @return UpdatePlanResource
      */
     public function newProviderSubscription(UpdateSignatureProvider $request) 
     {
@@ -44,7 +45,8 @@ class SignatureController extends Controller
     }
 
     /**
-     * Realiza a requisição de pagamento para o plano
+     * Makes the payment request for the plan
+     * 
      * @param $plan Model plan
      * @param $provider Model provider
      * @param $payment Model payment
@@ -56,7 +58,7 @@ class SignatureController extends Controller
         $gateway        = PaymentFactory::createGateway();
         $paymentTax     = $gateway->getGatewayTax();
         $paymentFee     = $gateway->getGatewayFee();
-        // Define a data de expiração da assinatura
+        // Set the subscription expiration date
         $period = $plan->period;
         if ($recurrence) {
             $period = $plan->period + Settings::getDaysForSubscriptionRecurrency();
@@ -151,6 +153,11 @@ class SignatureController extends Controller
         return $data;
     }
 
+    /**
+     * Get a list of signatures
+     * 
+     * @return view
+     */
     public function list()
     {
         $signatures = Signature::getList();
@@ -159,12 +166,24 @@ class SignatureController extends Controller
         return $view;
     }
 
+    /**
+     * Returns details of the current subscription
+     * 
+     * @param Request $request
+     * @return query
+     */
     public function query(Request $request){
         $model = new Signature;
         $query = $model->querySearch($request);
 		return $query;
     }
 
+     /**
+     * Returns details of the current subscription
+     * 
+     * @param $id
+     * @return void
+     */
     public function suspendOrActivate($id){
         $signature = Signature::find($id);
         if ($signature->activity == 1) {
@@ -177,7 +196,10 @@ class SignatureController extends Controller
     }
 
     /**
-     * Retorna detalhes da assinatura atual
+     * Returns details of the current subscription
+     * 
+     * @param SubscriptionDetailsFormRequest $request
+     * @return SubscriptionDetailResource
      */
     public function getDetails (SubscriptionDetailsFormRequest $request)
     {
@@ -189,6 +211,7 @@ class SignatureController extends Controller
 
     /**
      * Cancel a subscription
+     * 
      * @param CancelSubscriptionRequest $request
      * @return json
      */
@@ -200,7 +223,8 @@ class SignatureController extends Controller
     }
 
     /**
-     * Testa a mudança de status do boleto no caso da pagarme
+     * Tests the change of status of the billet in the case of pagame
+     * 
      * @param int $id
      * @return json
      */

@@ -26,15 +26,21 @@ class Plan extends Model
     public $timestamps = true;
     
     /**
-	 * Finds one row in the provider table associated with 'provider_id'
-	 * get Ledger by User Id
-	 * @return Signature | null
+	 * Making a relationship between signature and plan
+	 * 
+	 * @return Signature 
 	 **/
 	public function signature()
 	{
 		return $this->hasMany('App\Models\Signature', 'plan_id', 'id');
 	}
 
+	/**
+	 * Making a relationship between signature and plan
+	 * 
+	 * @param request
+	 * @return array 
+	 **/
 	public function querySearch(Request $request)
 	{
 		// get query parameters
@@ -107,24 +113,40 @@ class Plan extends Model
 		return $response;
 	}
 
+	/**
+	 * Making a relationship betwen signature and plan
+	 * 
+	 * @param id
+	 * @return Signature | null
+	 **/
 	public static function getPlanValue($id)
 	{
 		$return =  Plan::where('id', '=', $id)->value('plan_price');
 		return $return;
 	}
 
+	/**
+	 * Making a relationship betwen signature and plan
+	 * 
+	 * @param signatureId
+	 * @return Plan
+	 **/
 	public static function getPlanById($signatureId)
 	{
 		return Plan::where('id', '=', $id)->get();
 	}
 
+	/**
+	 * Get a list of signatures
+	 * 
+	 * @return array
+	 **/
 	public static function getList(){
 
 		$signature = DB::table('plan')
 		->leftJoin('signature', 'plan.id', '=', 'signature.plan_id')
 		->leftJoin('location', 'plan.location', '=', 'location.id')
 		->select('plan.id', 'plan.name', 'plan.plan_price', 'plan.period', 'plan.validity', DB::raw('ifnull(COUNT(plan_id), 0) as quantity'), 'location.name as location_name')
-		// ->select('plan.id', 'plan.name', 'plan.plan_price', 'plan.period')
 		->groupBy('plan.id')
 		->orderBy('signature.id')
 		->paginate(10);
@@ -133,7 +155,7 @@ class Plan extends Model
 	}
 
 	/**
-     * Retorna a lista de planos disponíveis para o provider
+     * Returns the list of available plans to the provider
 	 * @param int $locationId
 	 * @param int $providerId
 	 * 
@@ -160,7 +182,9 @@ class Plan extends Model
 	}
 
 	/**
-	 * Retorna um plano para teste
+	 * Create a plan for test
+	 * 
+	 * @return object
 	 */
 	public static function createForTest()
 	{

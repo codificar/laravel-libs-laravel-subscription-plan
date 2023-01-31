@@ -22,6 +22,7 @@ class Signature extends Model
 	
 	/** 
 	 * Function to get the next_expiration attribute formated
+	 * 
 	 * @return string
 	 */
 	public function getNextExpirationFormatedAttribute()
@@ -31,6 +32,7 @@ class Signature extends Model
 	
 	/** 
 	 * Function to get the created_at_formated attribute formated
+	 * 
 	 * @return string
 	 */
 	public function getCreatedAtFormatedAttribute()
@@ -45,7 +47,6 @@ class Signature extends Model
 	 */
     public $timestamps = true;
     
-       
      /**
 	 * Finds one row in the provider table associated with 'provider_id'
 	 *
@@ -105,7 +106,7 @@ class Signature extends Model
 		
 	/**
 	 * get provider signature active by provider_id
-	 * @param int $provider
+	 * @param int $providerId
 	 * 
 	 * @return Provider
 	 */
@@ -119,6 +120,11 @@ class Signature extends Model
 		return $return;
 	}
 
+	/**
+	 * get list of signatures
+	 * 
+	 * @return signature
+	 */
 	public static function getList(){
 
 		$signature = Signature::leftJoin('plan', 'signature.plan_id', '=', 'plan.id')
@@ -132,6 +138,12 @@ class Signature extends Model
 		return $signature;
 	}
 
+	/**
+	 * get list of signatures by plan id
+	 * 
+	 * @param int $id
+	 * @return signature
+	 */
 	public static function getListByPlanId($id){
 
 		$signature = Signature::select(['signature.*'])
@@ -141,6 +153,34 @@ class Signature extends Model
 		return $signature;
 	}
 
+	/**
+	 * get list of signatures by plan id and update data, used in case of plan deletion
+	 * 
+	 * @param int $id
+	 * @return signature
+	 */
+	public static function getListByPlanIdToDelete($id){
+
+		$signature = Signature::where(['plan_id' => $id])
+		->where(['is_cancelled' => 0])
+		->where(['activity' => 1])
+		->join('provider','signature.provider_id', '=', 'provider.id')
+		->update([
+			'signature.activity' => false,
+			'signature.is_cancelled' => true,
+			'signature.payment_id' => null,
+			'provider.signature_id' => null
+		]);
+
+		return $signature;
+	}
+
+	/**
+	 * get list of signatures by plan id and update data, used in case of plan deletion
+	 * 
+	 * @param $request
+	 * @return array
+	 */
 	public function querySearch(Request $request)
 	{
 		// get query parameters
@@ -221,7 +261,7 @@ class Signature extends Model
 	}
 
 	/**
-	 * Cria uma nova assinatura para o provider
+	 * Make a new signature 
 	 * 
 	 * @param int $providerId
 	 * @param int $planId
@@ -264,7 +304,8 @@ class Signature extends Model
 	}
 
 	/**
-	 * Retorna um registro de assinatura
+	 * Returns a signature record
+	 * 
 	 * @param int $transactionId
 	 * @return array
 	 */
@@ -273,8 +314,9 @@ class Signature extends Model
 		return self::where('transaction_id', $transactionId)->first();
 	}
 	/**
-	 * atualizar outras assinaturas do provider como inativo
-	 * @param int $transactionId
+	 * update other provider subscriptions to inactive
+	 * 
+	 * @param int $providerId
 	 * @return array
 	 */
 	public static function deactiveProviderSignatures($providerId)
@@ -285,6 +327,7 @@ class Signature extends Model
 
 	/**
 	 * Get subscriptions payed by billet to check paid status
+	 * 
 	 * @return array
 	 */
 	public static function getWithBilletForCheckExpiry ()
@@ -298,6 +341,7 @@ class Signature extends Model
 
 	/**
 	 * Try to cancel a subscription
+	 * 
 	 * @return boolean
 	 */
 	public function cancel()
@@ -316,6 +360,7 @@ class Signature extends Model
 
 	/**
 	 * Get subscriptions to recurrence
+	 * 
 	 * @return array
 	 */
 	public static function getSubscriptionsForRecurrency()
@@ -332,6 +377,7 @@ class Signature extends Model
 	
 	/**
 	 * Update all signature expired
+	 * 
 	 * @return array
 	 */
 	public static function updateSignatures()

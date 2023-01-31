@@ -53,7 +53,7 @@ class SubscriptionDetailsFormRequest extends FormRequest
         if ($this->signature)
             $this->transaction = $this->signature->transaction;
        
-        // Envia os dados para a request
+        // Send the data to the request
         $this->merge([
             'signature' => $this->signature,
             'transaction' => $this->transaction
