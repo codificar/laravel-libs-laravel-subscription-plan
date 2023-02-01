@@ -53,56 +53,28 @@ class SignatureController extends Controller
      * @param string $typeCharge
      * @return array
      */
-    public function RequestSubscriptionCharge ($plan, $provider, $payment, $typeCharge, $recurrence = false)
+    public function RequestSubscriptionCharge($plan, $provider, $payment, $typeCharge, $recurrence = false)
     {
-        $gateway        = PaymentFactory::createGateway();
-        $paymentTax     = $gateway->getGatewayTax();
-        $paymentFee     = $gateway->getGatewayFee();
+       
         // Set the subscription expiration date
         $period = $plan->period;
         if ($recurrence) {
             $period = $plan->period + Settings::getDaysForSubscriptionRecurrency();
         }
         $nextExpiration = Carbon::now()->addDays($period);
-        $description    = Finance::SIGNATURE_DEBIT;
         $value          = $plan->plan_price;
 
         if ($typeCharge == 'billet') {
-            $return = $gateway->billetCharge(
-                $value, 
-                $provider, 
-                route('GatewayPostbackBillet'), 
-                Carbon::now()->addDays(Settings::getBilletExpirationDays())->toIso8601String(),
-                Settings::getBilletInstructions()
-            );
+            $transaction = $this->doBilletCharge($provider, $value, $typeCharge);
         } else if($typeCharge == 'gatewayPix') {
-            $gateway = PaymentFactory::createPixGateway();
-            $return = $gateway->pixCharge($value, $provider);
+            $transaction = $this->doPixCharge($provider, $value, $typeCharge);
         } 
         else {
-            $return = $gateway->charge($payment, $value, $description, true);
+            $transaction = $this->doCreditCardCharge($provider, $value,$payment, $typeCharge);
         }
-        if ($return && !$return['success']) {
-            $message = trans('user_provider_web.payment_fail');
-           
-            if(isset($return['error']['messages'])) {
-                $message = $return['error']['messages'];
-            } 
-            if( isset($return['messages']) ){
-                $message = $return['messages'];
-            }
 
-            if(isset($return['original_message'])) {
-                $message = $return['message'];
-            }
-
-            return [
-                'success' => false,
-                'pix' =>null,
-                'charge_type'=>$typeCharge,
-                'message' => $message,
-                'error' => trans('user_provider_web.payment_fail')
-            ];
+        if (isset($transaction['success']) && !$transaction['success']) {
+            return $transaction;
         }
 
         $data = [
@@ -110,43 +82,16 @@ class SignatureController extends Controller
             'message' => trans('user_provider_web.signature_success')
         ];
 
-        $pix = null;
-        $pixBase64 = null;
-        $pixCopyPaste = null;
-        $pixExpirationDateTime = null;
-        if($typeCharge == 'gatewayPix') {
-            $pix = $return;
-            $pixBase64 = $pix['qr_code_base64'];
-            $pixCopyPaste = $pix['copy_and_paste'];
-            $pixExpirationDateTime = $pix['expiration_date_time'];
-            $data['message'] = trans('user_provider_web.pix_signature_success');
-        }
-        $data['pix'] = $pix;
-
-        $billetUrl = array_key_exists('billet_url', $return) ? $return['billet_url'] : null;
-
-        $transaction = Transaction::saveSignatureTransaction(
-            $return['status'], 
-            $value, 
-            $paymentTax, 
-            $paymentFee, 
-            $return["transaction_id"],
-            $billetUrl,
-            $provider->ledger->id,
-            $pixBase64,
-            $pixCopyPaste,
-            $pixExpirationDateTime
-        );
-
         $activity = 1;
         $signature = Signature::updateProviderSignature($provider->signature_id, $provider->id, $plan->id, $nextExpiration, $transaction->id, $activity, $typeCharge, $payment);
         $provider->updateSignatureId($signature->id);
         $transaction->setSignatureId($signature->id);
+
         $data['signature_id'] = $signature->id;
         $data['transaction_db_id'] = $transaction->id;
         $data['charge_type'] = $typeCharge;
 
-        if($billetUrl) {
+        if($typeCharge == 'billet') {
             NewSubscriptionMail::dispatch($signature);
         }
 
@@ -245,5 +190,164 @@ class SignatureController extends Controller
         } catch (\Throwable $th) {
             return response()->json(['erro' => $th->getMessage()]);
         }
+    }
+
+    /**
+     * handle message response
+     * @param array $response
+     * @return string
+     */
+    private function getMessageError(array $response)
+    {   
+        if(isset($response['error']['messages'])) {
+            return $response['error']['messages'];
+        } 
+        if( isset($response['messages']) ){
+            return $response['messages'];
+        }
+
+        if(isset($response['original_message'])) {
+            return $response['message'];
+        }
+
+        return trans('user_provider_web.payment_fail');
+    }
+
+    /**
+     * Do billet Charge
+     * @param Provider $provider
+     * @param float $value
+     * @param string $chargeType
+     * 
+     * @return array|Transaction
+     */
+    private function doBilletCharge($provider, float $value, $chargeType)
+    {
+        $gateway = PaymentFactory::createGateway();
+        $response = $gateway->billetCharge(
+            $value, 
+            $provider, 
+            route('GatewayPostbackBillet'), 
+            Carbon::now()->addDays(Settings::getBilletExpirationDays())->toIso8601String(),
+            Settings::getBilletInstructions()
+        );
+
+        if ($response && !$response['success']) {
+            $message = $this->getMessageError($response);
+            return [
+                'success' => false,
+                'pix' =>null,
+                'charge_type'=>$chargeType,
+                'message' => $message,
+                'error' => trans('user_provider_web.payment_fail')
+            ];
+        }
+
+        return $this->saveTransactionCharge($response, $provider, $value);
+
+    }
+
+    /**
+     * Do pix Charge
+     * @param Provider $provider
+     * @param float $value
+     * @param string $chargeType
+     * 
+     * @return array|Transaction
+     */
+    private function doPixCharge($provider, float $value, $chargeType)
+    {
+
+        $gateway = PaymentFactory::createPixGateway();
+        $response = $gateway->pixCharge($value, $provider);
+
+        if ($response && !$response['success']) {
+            $message = $this->getMessageError($response);
+            return [
+                'success' => false,
+                'pix' =>null,
+                'charge_type'=>$chargeType,
+                'message' => $message,
+                'error' => trans('user_provider_web.payment_fail')
+            ];
+        }
+
+        return $this->saveTransactionCharge($response, $provider, $value, true);
+
+    }
+
+    /**
+     * Do Credit Card Charge
+     * @param Provider $provider
+     * @param float $value
+     * @param Payment $payment
+     * @param string $chargeType
+     * 
+     * @return array|Transaction
+     */
+    private function doCreditCardCharge($provider, float $value, $payment, $chargeType)
+    {
+        $gateway = PaymentFactory::createGateway();
+        $description    = Finance::SIGNATURE_DEBIT;
+        $response = $gateway->charge($payment, $value, $description, true);
+
+        
+        if ($response && !$response['success']) {
+            $message = $this->getMessageError($response);
+            return [
+                'success' => false,
+                'pix' =>null,
+                'charge_type'=>$chargeType,
+                'message' => $message,
+                'error' => trans('user_provider_web.payment_fail')
+            ];
+        }
+
+        return $this->saveTransactionCharge($response, $provider, $value);
+
+    }
+
+    /**
+     * Save TRansaction charge
+     * @param array $response
+     * @param Provider $provider
+     * @param float $value
+     * @param bool $isPix
+     * 
+     * @return Transaction
+     */
+    private function saveTransactionCharge($response, $provider, $value, $isPix = false)
+    {
+        $gateway = PaymentFactory::createGateway();
+
+        $billetUrl = array_key_exists('billet_url', $response) ? $response['billet_url'] : null;
+
+        $pixBase64 = null;
+        $pixCopyPaste = null;
+        $pixExpirationDateTime = null;
+        
+        if($isPix) {
+            $gateway = PaymentFactory::createPixGateway();
+            $pixBase64 = $response['qr_code_base64'];
+            $pixCopyPaste = $response['copy_and_paste'];
+            $pixExpirationDateTime = $response['expiration_date_time'];
+        }
+
+        $paymentTax     = $gateway->getGatewayTax();
+        $paymentFee     = $gateway->getGatewayFee();
+
+        return Transaction::saveSignatureTransaction(
+            $response['status'], 
+            $value, 
+            $paymentTax, 
+            $paymentFee, 
+            $response["transaction_id"],
+            $billetUrl,
+            $provider->ledger->id,
+            $pixBase64,
+            $pixCopyPaste,
+            $pixExpirationDateTime
+        );
+
     }
 }
