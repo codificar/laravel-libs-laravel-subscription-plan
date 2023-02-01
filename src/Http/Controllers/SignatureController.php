@@ -40,7 +40,7 @@ class SignatureController extends Controller
         $hasSignature = Signature::getActiveProviderSignature($provider->id);
         $recurrence = $hasSignature ? true : false;
 
-        $requestSubscriptionCharge = $this->RequestSubscriptionCharge($plan, $provider, $payment, $typeCharge, $recurrence);
+        $requestSubscriptionCharge = $this->requestSubscriptionCharge($plan, $provider, $payment, $typeCharge, $recurrence);
         return new UpdatePlanResource($requestSubscriptionCharge);
     }
 
@@ -53,7 +53,7 @@ class SignatureController extends Controller
      * @param string $typeCharge
      * @return array
      */
-    public function RequestSubscriptionCharge($plan, $provider, $payment, $typeCharge, $recurrence = false)
+    public function requestSubscriptionCharge($plan, $provider, $payment, $typeCharge, $recurrence = false)
     {
        
         // Set the subscription expiration date
