@@ -3,6 +3,7 @@
 namespace Codificar\LaravelSubscriptionPlan\Models;
 
 use Illuminate\Support\Facades\DB;
+use Codificar\LaravelSubscriptionPlan\Models\Settings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -99,7 +100,7 @@ class Signature extends Model
 		
 	public static function getActivatedSignature()
 	{
-		$return = subscriptionPlan::where('activity', '=', 1)->get();
+		$return = Signature::where('activity', '=', 1)->get();
 
 		return $return;
 	}
@@ -126,7 +127,7 @@ class Signature extends Model
 	*/
     public function getGoodToCancelDateAttribute()
     {		
-        $goodToCancel = \Carbon::parse($this->next_expiration);
+        $goodToCancel = Carbon::parse($this->next_expiration);
         $goodToCancel = $goodToCancel->subDays(Settings::getBilletExpirationDays())->toDateString();
 		return date('d/m/Y', strtotime($goodToCancel));
     }
@@ -179,7 +180,7 @@ class Signature extends Model
 	 * get list of signatures by plan id and update data, used in case of plan deletion
 	 * 
 	 * @param int $id
-	 * @return signature
+	 * @return Signature
 	 */
 	public static function getListByPlanIdToDelete($id){
 
@@ -223,7 +224,7 @@ class Signature extends Model
 		});
 
 		// set first condition 1=1 (all results)
-		$query = subscriptionPlan::WhereNotNull('signature.id');
+		$query = Plan::WhereNotNull('signature.id');
 		// ->join('plan', 'signature.plan_id', '=', 'plan.id')
 		
 
