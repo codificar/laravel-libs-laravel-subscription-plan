@@ -10,7 +10,7 @@ import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 Vue.use(VueSweetalert2);
 
-import pagination from "laravel-vue-pagination";
+const pagination = require("laravel-vue-pagination");
 Vue.component("pagination", pagination);
 
 import SignatureList from "./pages/signature/signature_list.vue";

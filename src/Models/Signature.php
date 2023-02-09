@@ -3,6 +3,7 @@
 namespace Codificar\LaravelSubscriptionPlan\Models;
 
 use Illuminate\Support\Facades\DB;
+use Codificar\LaravelSubscriptionPlan\Models\Settings;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
@@ -99,7 +100,7 @@ class Signature extends Model
 		
 	public static function getActivatedSignature()
 	{
-		$return = subscriptionPlan::where('activity', '=', 1)->get();
+		$return = Signature::where('activity', '=', 1)->get();
 
 		return $return;
 	}
@@ -126,7 +127,7 @@ class Signature extends Model
 	*/
     public function getGoodToCancelDateAttribute()
     {		
-        $goodToCancel = \Carbon::parse($this->next_expiration);
+        $goodToCancel = Carbon::parse($this->next_expiration);
         $goodToCancel = $goodToCancel->subDays(Settings::getBilletExpirationDays())->toDateString();
 		return date('d/m/Y', strtotime($goodToCancel));
     }
@@ -154,7 +155,7 @@ class Signature extends Model
 		->groupBy('signature.id')
 		->select('signature.id', 'plan.name as name', 'signature.created_at', 'signature.next_expiration', 'plan.plan_price as plan_price', 
 		'provider.first_name as first_name', 'signature.activity', 'signature.is_cancelled')
-		->orderBy('signature.id')
+		->orderBy('signature.id', 'desc')
 		->paginate(10);
 
 		return $signature;
@@ -179,7 +180,7 @@ class Signature extends Model
 	 * get list of signatures by plan id and update data, used in case of plan deletion
 	 * 
 	 * @param int $id
-	 * @return signature
+	 * @return Signature
 	 */
 	public static function getListByPlanIdToDelete($id){
 
@@ -223,15 +224,14 @@ class Signature extends Model
 		});
 
 		// set first condition 1=1 (all results)
-		$query = subscriptionPlan::WhereNotNull('signature.id');
-		// ->join('plan', 'signature.plan_id', '=', 'plan.id')
+		$query = Signature::WhereNotNull('signature.id');
 		
 
 		// get filters conditions
 		$filters = isset($params["filters"]) ? $params["filters"] : $params;
 		
 		// field by field condition
-				
+		
 		if(isset($filters["signatures"])){
 			$signature = $filters["signatures"] ;
 
@@ -247,32 +247,60 @@ class Signature extends Model
 				->orWhere("signature.next_expiration", "LIKE", "%".$signature["expiration_date"]."%");
 			} else {
 
+				if(isset($signature["id"]) && $signature["id"]!= "")
+					$query->where('id', '=', $signature["id"]);
 				
-			if(isset($signature["id"]) && $signature["id"]!= "")
-				$query->where('id', '=', $signature["id"]);
-			
-			if(isset($signature["name"]) && $signature["name"]!= "")
-				$query->join('plan', 'signature.plan_id', '=', 'plan.id')->where('plan.name', 'LIKE', '%'.$signature["name"].'%');
-			
-			if(isset($signature["client_name"]) && $signature["client_name"]!= "")
-				$query->join('provider', 'signature.provider_id', '=', 'provider.id')
-				->where('provider.first_name', 'LIKE', '%'.$signature["client_name"].'%');
-					
-			if(isset($signature["signature_price"]) && $signature["signature_price"]!= "")
-				$query->join('plan', 'signature.plan_id', '=', 'plan.id')
-				->where('plan.plan_price', 'LIKE', '%'.$signature["signature_price"].'%');
-			
-			if(isset($signature["initial_date"]) && $signature["initial_date"]!= "")
-			$query->where('signature.created_at', 'LIKE', '%'.$signature["initial_date"].'%');
-
-			if(isset($signature["expiration_date"]) && $signature["expiration_date"]!= "")
-			$query->where('signature.next_expiration', 'LIKE', '%'.$signature["expiration_date"].'%');
+				if(isset($signature["name"]) && $signature["name"]!= "")
+					$query->join('plan', 'signature.plan_id', '=', 'plan.id')->where('plan.name', 'LIKE', '%'.$signature["name"].'%');
+				
+				if(isset($signature["client_name"]) && $signature["client_name"]!= "")
+					$query->join('provider', 'signature.provider_id', '=', 'provider.id')
+					->where('provider.first_name', 'LIKE', '%'.$signature["client_name"].'%');
 						
+				if(isset($signature["signature_price"]) && $signature["signature_price"]!= "")
+					$query->join('plan', 'signature.plan_id', '=', 'plan.id')
+					->where('plan.plan_price', 'LIKE', '%'.$signature["signature_price"].'%');
+				
+				if(isset($signature["initial_date"]) && $signature["initial_date"]!= "")
+					$query->where('signature.created_at', 'LIKE', '%'.$signature["initial_date"].'%');
+
+				if(isset($signature["expiration_date"]) && $signature["expiration_date"]!= "")
+					$query->where('signature.next_expiration', 'LIKE', '%'.$signature["expiration_date"].'%');
+							
 			}
 
 		}
 		
-		$query = $query->join('provider', 'signature.provider_id', '=', 'provider.id')->select('signature.*', 'signature.id as id', 'plan.*', 'plan.id as plan_id', 'provider.first_name', 'provider.id as provider_id')->paginate($pagination["itensPerPage"]);
+		$query = $query->select(
+				'signature.id as id', 
+				'signature.finance_id', 
+				'signature.activity', 
+				'signature.transaction_id', 
+				'signature.next_expiration', 
+				'signature.created_at as signature_created_at', 
+				'signature.updated_at as signature_updated_at', 
+				'signature.charge_type', 
+				'signature.is_cancelled', 
+				'signature.payment_id', 
+				'signature.check_billet_at', 
+				'plan.id as plan_id', 
+				'plan.name', 
+				'plan.period', 
+				'plan.plan_price', 
+				'plan.client', 
+				'plan.created_at as plan_created_at', 
+				'plan.updated_at as plan_updated_at', 
+				'plan.validity', 
+				'plan.visibility', 
+				'plan.location', 
+				'plan.allow_cancelation',
+				'provider.first_name', 
+				'provider.id as provider_id')
+			->leftjoin('plan', 'signature.plan_id', '=', 'plan.id')
+			->leftjoin('provider', 'signature.provider_id', '=', 'provider.id')
+			->groupBy('id')
+			->orderBy('id', 'desc')
+			->paginate($pagination["itensPerPage"]);
 
 		$type = gettype($query);
 		

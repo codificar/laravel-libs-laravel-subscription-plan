@@ -51,9 +51,6 @@ export default {
         }
       });
     },
-    test() {
-      console.log("Testando");
-    },
     fetch(page = 1) {
       var component = this;
       axios
@@ -106,7 +103,7 @@ export default {
           //Try to remove and show fail mission if fails
           axios.post("/admin/plan/delete/" + id).then(
             response => {
-              if ((response = "success")) {
+              if (response == "success") {
                 this.$swal({
                   title: this.trans("signature.success_delete"),
                   type: "success"
@@ -118,10 +115,6 @@ export default {
                   type: "error"
                 });
               }
-            },
-            response => {
-              console.log(response);
-              // error callback
             }
           );
         }
@@ -130,11 +123,9 @@ export default {
   },
   created() {
     this.signatures = JSON.parse(this.Signatures);
-    console.log(this.CurrencySymbol);
     if(this.CurrencySymbol) {
       this.currency = this.CurrencySymbol;
     }
-    // this.fetch();
   }
 };
 </script>
@@ -401,9 +392,20 @@ export default {
             </table>
           </div>
         </div>
-        <pagination :data="signatures" @pagination-change-page="fetch"></pagination>
+        <pagination :data="signatures" @pagination-change-page="fetch">
+          <span slot="prev-nav" class="page-link page-link-nav">&lt;</span>
+          <span slot="next-nav" class="page-link page-link-nav">&gt;</span>
+        </pagination>
       </div>
     </div>
     <!-- Row -->
   </div>
 </template>
+
+<style>
+.page-link-nav {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+</style>
