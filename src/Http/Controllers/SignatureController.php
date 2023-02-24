@@ -58,7 +58,7 @@ class SignatureController extends Controller
        
         // Set the subscription expiration date
         $period = $plan->period;
-        if ($recurrence && $typeCharge == 'billet') {
+        if ($recurrence) {
             $period = $plan->period + Settings::getDaysForSubscriptionRecurrency();
         }
         $nextExpiration = Carbon::now()->addDays($period);
