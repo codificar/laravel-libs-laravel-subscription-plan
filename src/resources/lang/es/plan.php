@@ -30,11 +30,13 @@ return array(
     'add_new_plan'              =>  'Añadir nuevo plan',
     'plan_delete_confirm'       =>  'Estás seguro que desea borrar el plan',
     'plan_visibility'           => 'Visibilidade do plano',
+    'visibility'                => 'Visibilidade',
     'visible'                   => 'Visível',
     'invisible'                 => 'Invisível',
     'location'                  => 'Localização',
     'min_validity'              => 'La validez no puede ser inferior al período.',
     'allow_cancelation'         => '¿Habilitar la cancelación antes de que expire la suscripción?',
+    'is_cancelation'            => 'Habilitar la cancelación',
     'allow_cancelation_error'   => '¡No está permitido cancelar antes del vencimiento!',
     'filters'                   =>  'Filtros',
     

@@ -146,7 +146,16 @@ class Plan extends Model
 		$signature = DB::table('plan')
 		->leftJoin('signature', 'plan.id', '=', 'signature.plan_id')
 		->leftJoin('location', 'plan.location', '=', 'location.id')
-		->select('plan.id', 'plan.name', 'plan.plan_price', 'plan.period', 'plan.validity', DB::raw('ifnull(COUNT(plan_id), 0) as quantity'), 'location.name as location_name')
+		->select(
+			'plan.id', 
+			'plan.name', 
+			'plan.plan_price', 
+			'plan.period', 
+			'plan.validity', 
+			'plan.visibility', 
+			'plan.allow_cancelation', 
+			DB::raw('ifnull(COUNT(plan_id), 0) as quantity'), 
+			'location.name as location_name')
 		->groupBy('plan.id')
 		->orderBy('signature.id')
 		->paginate(10);

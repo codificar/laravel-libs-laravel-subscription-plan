@@ -30,11 +30,13 @@ return array(
     'add_new_plan'              =>  'Adicionar novo plano',
     'plan_delete_confirm'       =>  'Deseja realmente excluir o plano',
     'plan_visibility'           => 'Visibilidade do plano',
+    'visibility'                => 'Visibilidade',
     'visible'                   => 'Visível',
     'invisible'                 => 'Invisível',
     'location'                  => 'Localização',
     'min_validity'              => 'Validade não pode ser menor que o período.',
     'allow_cancelation'         => 'Habilitar cancelamento antes de vencer a assinatura?',
+    'is_cancelation'            => 'Habilitar cancelamento',
     'allow_cancelation_error'   => 'Não é permitido cancelar antes do vencimento!',
     'filters'                   =>  'Filtros',
 

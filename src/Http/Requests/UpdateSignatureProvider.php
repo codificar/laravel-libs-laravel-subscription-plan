@@ -56,10 +56,10 @@ class UpdateSignatureProvider extends FormRequest
 
         $actualSubscription = $this->provider->signature;
 
-        if ($this->is_change && $actualSubscription && $actualSubscription->activity && !$actualSubscription->is_cancelled && $this->plan) {
+        if ($actualSubscription && $actualSubscription->activity && !$actualSubscription->is_cancelled && $this->plan) {
             $nextExp = Carbon::parse($actualSubscription->next_expiration);
             $now = Carbon::now();
-            $this->plan->period += $now->diffInDays($nextExp);
+            $this->plan->period += $now->diffAsCarbonInterval($nextExp)->getHumanDiffOptions();
         }
         
         $this->merge([

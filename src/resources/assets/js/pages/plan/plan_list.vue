@@ -136,6 +136,12 @@
                 <center>{{trans('plan.quantity_signatures')}}</center>
               </th>
               <th>
+                <center>{{trans('plan.visibility')}}</center>
+              </th>
+              <th>
+                <center>{{trans('plan.is_cancelation')}}</center>
+              </th>
+              <th>
                 <center>{{trans('plan.location')}}</center>
               </th>
               <th>
@@ -157,6 +163,22 @@
                   </td>
                   <td>
                     <center>{{ plan.quantity}}</center>
+                  </td>
+                  <td class="text-center">
+                    <span v-if="plan.visibility == 1" class="btn btn-success peq">
+                      {{ trans('plan.visible') }}
+                    </span>
+                    <span v-else class="btn btn-danger peq">
+                      {{trans('plan.invisible') }}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span v-if="plan.allow_cancelation == 1" class="btn btn-success peq">
+                      {{ trans('plan.yes') }}
+                    </span>
+                    <span v-else class="btn btn-danger peq">
+                      {{trans('plan.no') }}
+                    </span>
                   </td>
                   <td>
                     <center>{{ plan.location_name }}</center>
