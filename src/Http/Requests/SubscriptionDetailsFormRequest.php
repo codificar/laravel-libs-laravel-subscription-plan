@@ -44,13 +44,16 @@ class SubscriptionDetailsFormRequest extends FormRequest
         $this->provider_id = $this->provider_id ?? $this->id;
 
         $this->provider = Provider::find($this->provider_id);
-        $this->signature = Signature::find($this->provider->signature_id);
+        $this->signature = $this->provider->signature;
+        if(!$this->signature) {
+            $this->signature = Signature::find($this->provider->signature_id);
+        }
         $this->transaction = null;
 
         if ($this->signature)
             $this->transaction = $this->signature->transaction;
        
-        // Envia os dados para a request
+        // Send the data to the request
         $this->merge([
             'signature' => $this->signature,
             'transaction' => $this->transaction

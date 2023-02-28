@@ -30,11 +30,13 @@ return array(
     'add_new_plan'              =>  'Add new plan',
     'plan_delete_confirm'       =>  'Are you sure you want to delete the plan',
     'plan_visibility'           => 'Plan Visibility',
+    'visibility'                => 'Visibility',
     'visible'                   => 'Visible',
     'invisible'                 => 'Invisible',
     'location'                  => 'Location',
     'min_validity'              => 'Validity cannot be less than the period.',
     'allow_cancelation'         => 'Enable cancellation before the subscription expires?',
+    'is_cancelation'            => 'Enable cancellation',
     'allow_cancelation_error'   => 'It is not allowed to cancel before expiration!',
     'filters'                   =>  'Filters',
     
@@ -46,5 +48,7 @@ return array(
     'action'                    => 'Actions',
     'edit'                      =>  'Edit', 
     'delete'                    =>  'Delete', 
-
+    'yes'                       =>  'Yes',
+    'no'                        =>  'No',
+    'success_delete'            =>  'Plan deleted successfully',
 );

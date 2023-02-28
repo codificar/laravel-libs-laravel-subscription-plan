@@ -7,6 +7,7 @@ use Codificar\LaravelSubscriptionPlan\Http\Requests\UpdateSignatureProvider;
 use Codificar\LaravelSubscriptionPlan\Http\Resources\UpdatePlanResource;
 
 use Carbon\Carbon;
+use Codificar\LaravelSubscriptionPlan\Models\Signature;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
@@ -21,9 +22,9 @@ use Location;
 class PlanController extends Controller
 {
     /**
-     * Renderiza a tela de pagamento do plano escolhido
+     * Renders the payment screen for the chosen plan
      * 
-     * @param id id do plano(parâmetro de rota)
+     * @param $id id do plano(parâmetro de rota)
      * @return view checkout_plan.blade.php
      */
     public function checkoutPlan($id) {
@@ -42,17 +43,22 @@ class PlanController extends Controller
                     ->with('payment', $payment);
     }
 
+    /**
+     * Return view to add plane after getting locations without polygon area
+     * 
+     * @return view checkout_plan.blade.php
+     */
 	public function add(){
-        $locations = Location::allOrderByAlpha();
-
-        if ($locations)
-            $locations = $locations->each(function ($item, $key) {
-                unset($item['area_polygon']);
-            });
-        
+        $locations = Location::allOrderByAlphaUnsetPoligons();
         return view('subscriptionPlan::plan.add', ['edit' => false, 'plan' => '', 'locations' => $locations]);	
     }
     
+    /**
+     * Save plan data in the table
+     * 
+     * @param Request $request
+     * @return redirect
+     */
     public function store(Request $request){
         $values = \Input::get('plan');
 
@@ -74,26 +80,57 @@ class PlanController extends Controller
         return Redirect::to('admin/plan/list');
     }
 
+    /**
+     * Generates a list of plans and returns
+     * 
+     * @return view
+     */
     public function index(){
         $plans = Plan::getList();
         $jsonPlans = json_encode($plans);
         return view('subscriptionPlan::plan.list', ['plans'=>$jsonPlans]); 
     }
 
+     /**
+	 * Finds a row in the provider table associated with 'provider_id' 
+     * get ledger by user id
+     * 
+     * @param Request $request
+     * @return querry
+     */
     public function query(Request $request){
         $model = new Plan;
         $query = $model->querySearch($request);
 		return $query;
     }
     
+    /**
+	 * Deletes the plan and makes the necessary modifications to the provider and subscription tables
+     * 
+     * @param $id 
+     * @return string
+     */
     public function destroy($id){
-        if (Plan::find($id)->delete()){
-            return "success";
+        $plan = Plan::find($id);
+        if ($plan){
+            try {
+                Signature::getListByPlanIdToDelete($id);
+                $plan->delete();
+                return "success";
+            }catch (\Exception $e) {
+                return "failed";
+            }
         }else{
             return "failed";
         }
     }
 
+    /**
+     * Returns the list of available plans for the provider
+     * 
+     * @param $id 
+     * @return view
+     */
     public function show($id){
         $plan = Plan::find($id);
 
@@ -108,7 +145,9 @@ class PlanController extends Controller
     }
 
     /**
-     * Retorna a lista de planos disponíveis para o provider
+     * Returns the list of available plans for the provider
+     * 
+     * @param Request $request
      * @return json
      */
     public function getPlansListForProvider (Request $request) {
@@ -116,7 +155,7 @@ class PlanController extends Controller
         $provider = Provider::find($request->id);
 
         if($provider)
-            $plans = Plan::getPlansListForProvider($provider->location_id);
+            $plans = Plan::getPlansListForProvider($provider->location_id, $provider->id);
 
         return response()->json(['success' => true, 'plans' => $plans]);
     }

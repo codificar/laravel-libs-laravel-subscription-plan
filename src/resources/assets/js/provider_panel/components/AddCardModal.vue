@@ -84,8 +84,7 @@ export default {
                         type: 'success',
                         title: 'OK!',
                         text: response.data.message
-                    })
-
+                    });
                     this.$eventBus.$emit('send-data', newCard)
                 } else {
                     this.$swal({
