@@ -12,7 +12,9 @@ use Settings as SettingsProject;
 class Settings extends SettingsProject
 {
     /**
-	 * Retorno a quantidade de dias setada para vencimento do boleto
+	 * Returns the number of days set for the payment slip to expire
+	 * 
+	 * @return string
 	 */
 	public static function getBilletExpirationDays()
 	{
@@ -24,8 +26,10 @@ class Settings extends SettingsProject
 			return 5;
 	}
 
-		/**
-	 * Retorno as instruções do boleto
+	/**
+	 * Returns ticket instructions
+	 * 
+	 * @return string
 	 */
 	public static function getBilletInstructions()
 	{
@@ -39,6 +43,7 @@ class Settings extends SettingsProject
 
 	/**
 	 * Get days for generate subscription recurrency before next expiration
+	 * 
 	 * @return int
 	 */
 	public static function getDaysForSubscriptionRecurrency()

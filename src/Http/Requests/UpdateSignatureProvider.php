@@ -29,7 +29,7 @@ class UpdateSignatureProvider extends FormRequest
     public function rules()
     {
         return [
-            'charge_type' => 'required|in:card,billet',
+            'charge_type' => 'required|in:card,billet,gatewayPix',
             'plan_id'   => 'required',
             'payment_id'=> 'required_if:charge_type,card',
             'plan' 	    => 'required',
@@ -50,15 +50,16 @@ class UpdateSignatureProvider extends FormRequest
         $this->payment = Payment::find($this->payment_id);
         $this->provider = Provider::find($this->provider_id);
 
-        if (!$this->payment || $this->payment->provider_id != $this->provider->id)
+        if (!$this->payment || $this->payment->provider_id != $this->provider->id) {
             $this->payment = null;
+        }
 
         $actualSubscription = $this->provider->signature;
 
-        if ($this->is_change && $actualSubscription && $actualSubscription->activity && !$actualSubscription->is_cancelled && $this->plan) {
+        if ($actualSubscription && $actualSubscription->activity && !$actualSubscription->is_cancelled && $this->plan) {
             $nextExp = Carbon::parse($actualSubscription->next_expiration);
             $now = Carbon::now();
-            $this->plan->period += $now->diffInDays($nextExp);
+            $this->plan->period += $now->diffAsCarbonInterval($nextExp)->getHumanDiffOptions();
         }
         
         $this->merge([
@@ -68,16 +69,16 @@ class UpdateSignatureProvider extends FormRequest
     }
 
     /**
-     * Caso a validação falhe, retorna os itens de erro
+     * If the validation fails, it returns the error items
      * 
      * @return Json
      */
     protected function failedValidation(Validator $validator) 
     {   
-        // Pega as mensagens de erro     
+        // Get error messages     
         $error_messages = $validator->errors()->all();
 
-        // Exibe os parâmetros de erro
+        // Displays error parameters
         throw new HttpResponseException(
         response()->json(
             [

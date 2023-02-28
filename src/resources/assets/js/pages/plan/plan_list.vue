@@ -136,6 +136,12 @@
                 <center>{{trans('plan.quantity_signatures')}}</center>
               </th>
               <th>
+                <center>{{trans('plan.visibility')}}</center>
+              </th>
+              <th>
+                <center>{{trans('plan.is_cancelation')}}</center>
+              </th>
+              <th>
                 <center>{{trans('plan.location')}}</center>
               </th>
               <th>
@@ -150,13 +156,29 @@
                     <center>{{ plan.name }}</center>
                   </td>
                   <td>
-                    <center>{{ plan.plan_price }}</center>
+                    <center>{{ formatCurrency(plan.plan_price) }}</center>
                   </td>
                   <td>
                     <center>{{ plan.validity}}</center>
                   </td>
                   <td>
                     <center>{{ plan.quantity}}</center>
+                  </td>
+                  <td class="text-center">
+                    <span v-if="plan.visibility == 1" class="btn btn-success peq">
+                      {{ trans('plan.visible') }}
+                    </span>
+                    <span v-else class="btn btn-danger peq">
+                      {{trans('plan.invisible') }}
+                    </span>
+                  </td>
+                  <td class="text-center">
+                    <span v-if="plan.allow_cancelation == 1" class="btn btn-success peq">
+                      {{ trans('plan.yes') }}
+                    </span>
+                    <span v-else class="btn btn-danger peq">
+                      {{trans('plan.no') }}
+                    </span>
                   </td>
                   <td>
                     <center>{{ plan.location_name }}</center>
@@ -214,10 +236,11 @@
 import axios from "axios";
 
 export default {
-  props: ["EditPermission", "DeletePermission", "Plans"],
+  props: ["EditPermission", "DeletePermission", "Plans", "CurrencySymbol"],
   data() {
     return {
       plans: [],
+      currency: '$',
       qtd: [],
       plan_filter: {
         name: "",
@@ -261,6 +284,14 @@ export default {
       this.plan_filter.id = "";
       this.plan_filter.quantity_signatures = "";
     },
+    formatCurrency(value) {
+      if (value != undefined || value != "") {                
+          let val = (value/1).toFixed(2).replace('.', ',')
+          return this.currency + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      } else {
+          return "";
+      }
+    },
     deletePlan(id, name) {
       this.$swal({
         title: this.trans("plan.plan_delete_confirm") + " " + name + "?",
@@ -297,6 +328,9 @@ export default {
   },
   created() {
     this.plans = JSON.parse(this.Plans);
+    if(this.CurrencySymbol) {
+      this.currency = this.CurrencySymbol;
+    }
     // this.fetch();
   }
 };

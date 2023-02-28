@@ -20,7 +20,8 @@
     <plan-list
             plans = "{{ $plans }}"
             edit-permission="{{ AuthUtils::hasPermissionByUrl('AdminUserEdit') }}"
-            delete-permission="{{ AuthUtils::hasPermissionByUrl('AdminDeleteUser') }}">
+            delete-permission="{{ AuthUtils::hasPermissionByUrl('AdminDeleteUser') }}"
+            currency-symbol={{ \Settings::getFormattedCurrency()}}>
     </plan-list>
 </div>
 @endsection

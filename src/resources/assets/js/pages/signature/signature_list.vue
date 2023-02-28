@@ -2,11 +2,11 @@
 import axios from "axios";
 
 export default {
-  props: ["EditPermission", "DeletePermission", "Signatures"],
+  props: ["EditPermission", "DeletePermission", "Signatures", "CurrencySymbol"],
   data() {
     return {
       signatures: [],
-
+      currency: '$',
       signature_filter: {
         id: "",
         name: "",
@@ -51,9 +51,6 @@ export default {
         }
       });
     },
-    test() {
-      console.log("Testando");
-    },
     fetch(page = 1) {
       var component = this;
       axios
@@ -85,6 +82,14 @@ export default {
       this.signature_filter.id = "";
       this.signature_filter.quantity_signatures = "";
     },
+    formatCurrency(value) {
+      if (value != undefined || value != "") {                
+          let val = (value/1).toFixed(2).replace('.', ',')
+          return this.currency + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      } else {
+          return "";
+      }
+    },
     deletePlan(id, name) {
       this.$swal({
         title:
@@ -98,7 +103,7 @@ export default {
           //Try to remove and show fail mission if fails
           axios.post("/admin/plan/delete/" + id).then(
             response => {
-              if ((response = "success")) {
+              if (response == "success") {
                 this.$swal({
                   title: this.trans("signature.success_delete"),
                   type: "success"
@@ -110,10 +115,6 @@ export default {
                   type: "error"
                 });
               }
-            },
-            response => {
-              console.log(response);
-              // error callback
             }
           );
         }
@@ -122,7 +123,9 @@ export default {
   },
   created() {
     this.signatures = JSON.parse(this.Signatures);
-    // this.fetch();
+    if(this.CurrencySymbol) {
+      this.currency = this.CurrencySymbol;
+    }
   }
 };
 </script>
@@ -295,6 +298,9 @@ export default {
                 <center>{{trans('signature.situation')}}</center>
               </th>
               <th>
+                <center>{{trans('signature.signature_cancelation')}}</center>
+              </th>
+              <th>
                 <center>{{trans('signature.action')}}</center>
               </th>
               <tbody>
@@ -306,13 +312,13 @@ export default {
                     <center>{{ signature.name }}</center>
                   </td>
                   <td>
-                    <center>{{ signature.created_at }}</center>
+                    <center>{{ signature.created_at_formated || signature.created_at }}</center>
                   </td>
                   <td>
-                    <center>{{ signature.next_expiration }}</center>
+                    <center>{{ signature.next_expiration_formated || signature.next_expiration }}</center>
                   </td>
                   <td>
-                    <center>{{ signature.plan_price }}</center>
+                    <center>{{ formatCurrency(signature.plan_price) }}</center>
                   </td>
                   <td>
                     <center>{{ signature.first_name }}</center>
@@ -327,6 +333,19 @@ export default {
                         v-if="signature.activity == 0"
                         class="btn btn-danger peq"
                       >{{trans('signature.inactive') }}</span>
+                    </center>
+                    <!-- <center>{{ signature.activity }}</center> -->
+                  </td>
+                  <td>
+                    <center>
+                      <span
+                        v-if="signature.is_cancelled == 0"
+                        class="btn btn-success peq"
+                      >{{trans('signature.no') }}</span>
+                      <span
+                        v-if="signature.is_cancelled == 1"
+                        class="btn btn-danger peq"
+                      >{{trans('signature.yes') }}</span>
                     </center>
                     <!-- <center>{{ signature.activity }}</center> -->
                   </td>
@@ -373,9 +392,20 @@ export default {
             </table>
           </div>
         </div>
-        <pagination :data="signatures" @pagination-change-page="fetch"></pagination>
+        <pagination :data="signatures" @pagination-change-page="fetch">
+          <span slot="prev-nav" class="page-link page-link-nav">&lt;</span>
+          <span slot="next-nav" class="page-link page-link-nav">&gt;</span>
+        </pagination>
       </div>
     </div>
     <!-- Row -->
   </div>
 </template>
+
+<style>
+.page-link-nav {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+</style>

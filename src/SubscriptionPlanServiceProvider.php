@@ -1,6 +1,7 @@
 <?php
 namespace Codificar\LaravelSubscriptionPlan;
 
+use Codificar\LaravelSubscriptionPlan\Console\Commands\UpdateSignaturesJob;
 use Illuminate\Support\ServiceProvider;
 
 class SubscriptionPlanServiceProvider extends ServiceProvider {
@@ -21,6 +22,11 @@ class SubscriptionPlanServiceProvider extends ServiceProvider {
             __DIR__.'/../public/js' => public_path('vendor/codificar/subscription-plan/js'),
         ], 'public_vuejs_libs');
         
+		if ($this->app->runningInConsole()) {
+			$this->commands([
+				UpdateSignaturesJob::class
+			]);
+		}
     }
 
     public function register()

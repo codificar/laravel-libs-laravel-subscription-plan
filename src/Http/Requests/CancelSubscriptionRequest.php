@@ -55,7 +55,8 @@ class CancelSubscriptionRequest extends FormRequest
     }
 
     /**
-     * Retorna um json caso a validação falhe.
+     * Returns a json if validation fails.
+     * 
      * @throws HttpResponseException
      */
     protected function failedValidation(Validator $validator)

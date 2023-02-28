@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateProviderTable extends Migration
+class UpdateProviderTableSignature extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +14,8 @@ class UpdateProviderTable extends Migration
     public function up()
     {
         Schema::table('provider', function (Blueprint $table) {
-            //
-            if (Schema::hasColumn('provider', 'signature_id')) {
-                $table->integer('signature_id')->nullable()->change();
+            if (!Schema::hasColumn('provider', 'signature_id')) {
+                $table->integer('signature_id')->nullable();
             }
         });
     }
@@ -29,9 +28,8 @@ class UpdateProviderTable extends Migration
     public function down()
     {
         Schema::table('provider', function (Blueprint $table) {
-            //
-            if (!Schema::hasColumn('provider', 'signature_id')) {
-                $table->integer('signature_id')->change();
+            if (Schema::hasColumn('provider', 'signature_id')) {
+                $table->integer('signature_id');
             }
         });
     }

@@ -20,7 +20,8 @@
 	<div id="VueJs">
 		<plans-grid 
 			:planslist="{{ $plans }}"
-			:validsignature="{{ $validSignature }}">
+			:validsignature="{{ $validSignature }}"
+			:url-pix="'{{ route('providerPixScreen') }}'">
 		</plans-grid>	
 	</div>
 @endsection
