@@ -1,24 +1,24 @@
 <?php
+
 //rotas do Institution Controller
 Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controllers'), function () {
     /**
     * Rotas com Middleware
     */
-    Route::group(['prefix' => 'api/v3/admin','middleware' => ['auth.admin_api', 'cors'],], function(){
+    Route::group(['prefix' => 'api/v3/admin','middleware' => ['auth.admin_api', 'cors'],], function () {
         Route::get('/plan', 'PlanController@index');
         Route::post('/storePlan', 'PlanController@store');
-		Route::get('/plan/add', 'PlanController@add');
-		Route::get('/plan/filter', 'PlanController@filter');
-		Route::post('/plan/delete', 'PlanController@delete');
-		Route::post('/plan/update', 'PlanController@addOrUpdate');
-		Route::get('/plan/signatures', 'SignatureController@index');
+        Route::get('/plan/add', 'PlanController@add');
+        Route::get('/plan/filter', 'PlanController@filter');
+        Route::post('/plan/delete', 'PlanController@delete');
+        Route::post('/plan/update', 'PlanController@addOrUpdate');
+        Route::get('/plan/signatures', 'SignatureController@index');
     });
-    
-    Route::group(['prefix' => 'admin','middleware' => ['auth.admin_api', 'cors'],], function(){
 
+    Route::group(['prefix' => 'admin','middleware' => ['auth.admin_api', 'cors'],], function () {
         Route::get('/plan/add', array('as' => 'AddPlan', 'uses' => 'PlanController@add'));
         Route::post('/plan/store', array('as' => 'StorePlan', 'uses' => 'PlanController@store'));
-        Route::get('/plan', array('as' => 'PlanList', 'uses' => 'PlanController@index'));
+        Route::get('/plan', array('as' => 'PlanIndex', 'uses' => 'PlanController@index'));
         Route::get('/plan/list', array('as' => 'PlanList', 'uses' => 'PlanController@index'));
         Route::get('/plan/filter', array('as' => 'FilterPlan', 'uses' => 'PlanController@filter'));
         Route::post('/plan/fetch', array('as' => 'PlanFetch', 'uses' => 'PlanController@query'));
@@ -26,14 +26,14 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
         Route::get('/plan/{id}', array('as' => 'PlanShow', 'uses' => 'PlanController@show'));
 
         Route::get('/signature', array('as' => 'SignatureList', 'uses' => 'SignatureController@list'));
-        Route::post('/signature/fetch', array('as' => 'PlanFetch', 'uses' => 'SignatureController@query'));
+        Route::post('/signature/fetch', array('as' => 'SignatureFetch', 'uses' => 'SignatureController@query'));
         Route::post('/signature/suspend/{id}', array('as' => 'SuspendOrActivate', 'uses' => 'SignatureController@suspendOrActivate'));
     });
 
     /**
      * Routes for provider panel
-     */  
-    Route::group(['prefix' => 'libs/provider', 'middleware' => 'auth.provider'], function(){
+     */
+    Route::group(['prefix' => 'libs/provider', 'middleware' => 'auth.provider'], function () {
         Route::get('/plans', array('as' => 'ProviderListPlans','uses' => 'WebProviderController@listPlans'));
         Route::get('/get_plans', array('as' => 'GetPlans','uses' => 'WebProviderController@getPlans'));
         Route::get('/credit_card', array('as' => 'ListCreditCard','uses' => 'WebProviderController@listCards'));
@@ -47,7 +47,7 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
     /**
      * Rotas para aplicativo android provider
      */
-    Route::group(['prefix' => 'api/libs/provider' ,'middleware' => 'auth.provider_api:api'], function() {
+    Route::group(['prefix' => 'api/libs/provider' ,'middleware' => 'auth.provider_api:api'], function () {
         /**
          * @OA\Post(path="/api/v3/provider/update_plan",
          *      tags={"Provider"},
@@ -169,13 +169,13 @@ Route::group(array('namespace'=>'Codificar\LaravelSubscriptionPlan\Http\Controll
 });
 
 /** Credit card */
-Route::group(['prefix' => 'api/v3', 'middleware' => ['auth.admin_api', 'cors']], function(){
+Route::group(['prefix' => 'api/v3', 'middleware' => ['auth.admin_api', 'cors']], function () {
     Route::post('/addCard', array('uses' => 'CreditCardController@addPaymentCard'));
     Route::post('/defaultCard', array('uses' => 'CreditCardController@defaultCard'));
     Route::post('/removeCard', array('uses' => 'CreditCardController@removeCard'));
 });
 
-Route::group(['middleware' => 'auth.admin'], function() {
+Route::group(['middleware' => 'auth.admin'], function () {
     Route::get('/admin/test_pay_status/{id}', 'api\v3\SignatureController@testBilletPayment');
 });
 
