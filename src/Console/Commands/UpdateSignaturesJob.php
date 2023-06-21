@@ -43,4 +43,12 @@ class UpdateSignaturesJob extends Command
         Signature::updateSignatures();
         
     }
+
+    /**
+	 * Add a Tag to Laravel Horizon
+	 */
+	public function tags()
+	{
+		return ['SignatureUpdate'];
+	}
 }
