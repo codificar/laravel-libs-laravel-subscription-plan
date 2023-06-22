@@ -35,7 +35,9 @@ class UpdateSignaturesJob extends Command implements ShouldQueue
      * @return void
      */
     public function __construct()
-    {}
+    {
+        parent::__construct();
+    }
 
     /**
      * Execute the console command.
