@@ -4,10 +4,17 @@ namespace Codificar\LaravelSubscriptionPlan\Console\Commands;
 
 use Illuminate\Console\Command;
 use Codificar\LaravelSubscriptionPlan\Models\Signature;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
 
-
-class UpdateSignaturesJob extends Command
+class UpdateSignaturesJob extends Command implements ShouldQueue
 {
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    
     /**
      * The name and signature of the console command.
      *
@@ -20,7 +27,7 @@ class UpdateSignaturesJob extends Command
      *
      * @var string
      */
-    protected $description = 'Update signatures expired to deactive';
+    protected $description = 'Update signatures expired to deactivate';
 
     /**
      * Create a new command instance.
@@ -28,9 +35,7 @@ class UpdateSignaturesJob extends Command
      * @return void
      */
     public function __construct()
-    {
-        parent::__construct();
-    }
+    {}
 
     /**
      * Execute the console command.
@@ -39,7 +44,6 @@ class UpdateSignaturesJob extends Command
      */
     public function handle()
     {
-        $this->info("Search Signatures to cancel");
         Signature::updateSignatures();
         
     }
@@ -49,6 +53,6 @@ class UpdateSignaturesJob extends Command
 	 */
 	public function tags()
 	{
-		return ['SignatureUpdate'];
+		return ['LibSignature.updateExpired'];
 	}
 }
