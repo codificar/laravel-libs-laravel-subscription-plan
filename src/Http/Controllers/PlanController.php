@@ -60,24 +60,29 @@ class PlanController extends Controller
      * @return redirect
      */
     public function store(Request $request){
-        $values = \Input::get('plan');
-
-        if(array_key_exists('id', $values) && !empty($values['id']))
-            $plan = Plan::find($values['id']);
-        else
-            $plan = new Plan;
-
-        $plan->name = $values['name'];
-        $plan->period = $values['period'];
-        $plan->plan_price = $values['plan_price'];
-        $plan->client = $values['client'];
-        $plan->validity = $values['validity'];
-        $plan->visibility = $values['visibility'];
-        $plan->location = $values['location'];
-        $plan->allow_cancelation = $values['allow_cancelation'];
-        $plan->save();
-        
-        return Redirect::to('admin/plan/list', 201);
+        try {
+            $values = \Input::get('plan');
+    
+            if(array_key_exists('id', $values) && !empty($values['id']))
+                $plan = Plan::find($values['id']);
+            else
+                $plan = new Plan;
+    
+            $plan->name = $values['name'];
+            $plan->period = $values['period'];
+            $plan->plan_price = $values['plan_price'];
+            $plan->client = $values['client'];
+            $plan->validity = $values['validity'];
+            $plan->visibility = $values['visibility'];
+            $plan->location = $values['location'];
+            $plan->allow_cancelation = $values['allow_cancelation'];
+            $plan->save();
+            
+            return Redirect::to('admin/plan/list', 201);
+        } catch(\Exception $e) {
+            \Log::error($e->getMessage() . $e->getTraceAsString());
+            return Redirect::to('admin/plan/add', 400);
+        }
     }
 
     /**
