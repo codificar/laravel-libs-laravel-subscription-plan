@@ -77,7 +77,7 @@ class PlanController extends Controller
         $plan->allow_cancelation = $values['allow_cancelation'];
         $plan->save();
         
-        return Redirect::to('admin/plan/list');
+        return Redirect::to('admin/plan/list', 201);
     }
 
     /**
