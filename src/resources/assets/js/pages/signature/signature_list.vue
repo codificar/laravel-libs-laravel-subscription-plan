@@ -300,7 +300,7 @@ export default {
               <th>
                 <center>{{trans('signature.signature_cancelation')}}</center>
               </th>
-              <th>
+              <th v-if="DeletePermission">
                 <center>{{trans('signature.action')}}</center>
               </th>
               <tbody>
@@ -349,7 +349,7 @@ export default {
                     </center>
                     <!-- <center>{{ signature.activity }}</center> -->
                   </td>
-                  <td>
+                  <td v-if="DeletePermission">
                     <div class="dropdown">
                       <center>
                         <button
@@ -367,14 +367,6 @@ export default {
                           role="menu"
                           aria-labelledby="dropdownMenu1"
                         >
-                          <!-- EDITAR -->
-                          <a
-                            v-if="EditPermission"
-                            class="dropdown-item"
-                            tabindex="-1"
-                            :href="'/admin/plan/' + signature.id"
-                          >{{ trans('signature.debit_collection') }}</a>
-
                           <!-- ATIVAR DESATIVAR -->
                           <button
                             v-if="DeletePermission"

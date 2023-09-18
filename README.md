@@ -87,6 +87,23 @@ Check if has the laravel publishes in composer.json with public_vuejs_libs tag:
 			Codificar\Bank\BankServiceProvider::class,
 		],
 ```
+
+- Configure Horizon Job to automatic update expired signatures: in app/console/kernel add 
+
+```
+//add the Job import 
+use Codificar\LaravelSubscriptionPlan\Console\Commands\UpdateSignaturesJob;
+
+protected function schedule(Schedule $schedule)
+	{
+		...
+		// Add the stretch below
+		/**
+		* Update signatures expired to deactive by Lib: Subscription Plan
+		*/
+		$schedule->job(new UpdateSignaturesJob)->everyMinute();
+	}
+```
 - Migrate the database tables
 
 ```
