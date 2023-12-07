@@ -19,6 +19,7 @@
 <div id="VueJs">
     <plan-list
             plans = "{{ $plans }}"
+            currency="{{ $currency }}"
             edit-permission="{{ AuthUtils::hasPermissionByUrl('AdminUserEdit') }}"
             delete-permission="{{ AuthUtils::hasPermissionByUrl('AdminDeleteUser') }}"
             currency-symbol={{ \Settings::getFormattedCurrency()}}>

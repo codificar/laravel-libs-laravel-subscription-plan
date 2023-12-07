@@ -16,6 +16,7 @@
 <div id="VueJs">
 	<signature-list
         signatures = "{{ $signatures }}"
+        currency="{{ $currency }}"
         suspendOrActivate="{{ AuthUtils::hasPermissionByUrl('AdminUserEdit') }}"
         edit-permission="{{ AuthUtils::hasPermissionByUrl('AdminUserEdit') }}"
         delete-permission="{{ AuthUtils::hasPermissionByUrl('AdminDeleteUser') }}"

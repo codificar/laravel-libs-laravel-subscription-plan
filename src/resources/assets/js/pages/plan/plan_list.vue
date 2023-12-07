@@ -236,11 +236,12 @@
 import axios from "axios";
 
 export default {
-  props: ["EditPermission", "DeletePermission", "Plans", "CurrencySymbol"],
+  props: ["EditPermission", "DeletePermission", "Plans", "CurrencySymbol", "Currency"],
   data() {
     return {
       plans: [],
-      currency: '$',
+      currencySymbol: '$',
+      currency: '',
       qtd: [],
       plan_filter: {
         name: "",
@@ -285,11 +286,18 @@ export default {
       this.plan_filter.quantity_signatures = "";
     },
     formatCurrency(value) {
-      if (value != undefined || value != "") {                
-          let val = (value/1).toFixed(2).replace('.', ',')
-          return this.currency + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      if (value != undefined || value != "") {
+        let formattedValue = ""
+        if (this.currency == "PYG") {
+          let val = (value / 1).toFixed().replace('.', ',')
+          formattedValue = this.currencySymbol + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "")
+        } else {
+          let val = (value / 1).toFixed(2).replace('.', ',')
+          formattedValue = this.currencySymbol + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        }
+        return formattedValue
       } else {
-          return "";
+        return "";
       }
     },
     deletePlan(id, name) {
@@ -319,7 +327,6 @@ export default {
             },
             response => {
               console.log(response);
-              // error callback
             }
           );
         }
@@ -329,9 +336,11 @@ export default {
   created() {
     this.plans = JSON.parse(this.Plans);
     if(this.CurrencySymbol) {
-      this.currency = this.CurrencySymbol;
+      this.currencySymbol = this.CurrencySymbol;
     }
-    // this.fetch();
+    if(this.Currency) {
+      this.currency = this.Currency;
+    }
   }
 };
 </script>
