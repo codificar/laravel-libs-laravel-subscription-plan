@@ -107,7 +107,8 @@ class SignatureController extends Controller
     {
         $signatures = Signature::getList();
         $jsonSignatures = json_encode($signatures);
-        $view = view('subscriptionPlan::signature.list', ['signatures'=>$jsonSignatures]); 
+        $currency = Settings::findByKey('generic_keywords_currency');
+        $view = view('subscriptionPlan::signature.list', ['signatures' => $jsonSignatures, 'currency' => $currency]); 
         return $view;
     }
 
