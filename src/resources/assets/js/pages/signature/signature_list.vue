@@ -2,11 +2,12 @@
 import axios from "axios";
 
 export default {
-  props: ["EditPermission", "DeletePermission", "Signatures", "CurrencySymbol"],
+  props: ["EditPermission", "DeletePermission", "Signatures", "CurrencySymbol","Currency"],
   data() {
     return {
       signatures: [],
-      currency: '$',
+      currencySymbol: '$',
+      currency: '',
       signature_filter: {
         id: "",
         name: "",
@@ -83,9 +84,16 @@ export default {
       this.signature_filter.quantity_signatures = "";
     },
     formatCurrency(value) {
-      if (value != undefined || value != "") {                
-          let val = (value/1).toFixed(2).replace('.', ',')
-          return this.currency + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      if (value != undefined || value != "") {
+        let formattedValue = ""
+        if (this.currency == "PYG") {
+          let val = (value / 1).toFixed().replace('.', ',')
+          formattedValue = this.currencySymbol + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, "")
+        } else {
+          let val = (value / 1).toFixed(2).replace('.', ',')
+          formattedValue = this.currencySymbol + " " + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+        }
+        return formattedValue
       } else {
           return "";
       }
@@ -124,7 +132,10 @@ export default {
   created() {
     this.signatures = JSON.parse(this.Signatures);
     if(this.CurrencySymbol) {
-      this.currency = this.CurrencySymbol;
+      this.currencySymbol = this.CurrencySymbol;
+    }
+    if(this.Currency) {
+      this.currency = this.Currency;
     }
   }
 };

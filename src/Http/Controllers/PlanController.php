@@ -50,7 +50,9 @@ class PlanController extends Controller
      */
 	public function add(){
         $locations = Location::allOrderByAlphaUnsetPoligons();
-        return view('subscriptionPlan::plan.add', ['edit' => false, 'plan' => '', 'locations' => $locations]);	
+        $currencySymbol = \Settings::getFormattedCurrency();
+        
+        return view('subscriptionPlan::plan.add', ['edit' => false, 'plan' => '', 'locations' => $locations, 'currencySymbol' => $currencySymbol]);	
     }
     
     /**
@@ -93,7 +95,9 @@ class PlanController extends Controller
     public function index(){
         $plans = Plan::getList();
         $jsonPlans = json_encode($plans);
-        return view('subscriptionPlan::plan.list', ['plans'=>$jsonPlans]); 
+        $currency = \Settings::findByKey('generic_keywords_currency');
+        
+        return view('subscriptionPlan::plan.list', ['plans' => $jsonPlans, 'currency' => $currency]); 
     }
 
      /**

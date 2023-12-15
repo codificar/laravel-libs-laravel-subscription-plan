@@ -4,7 +4,7 @@ import VuePassword from 'vue-password';
 import { required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators';
 
 export default {
-    props: ["redirect", "edit", "crsf_token", "Plan", 'Locations'],
+    props: ["redirect", "edit", "crsf_token", "Plan", 'Locations', 'CurrencySymbol'],
     data() {
         return {
             plan: {
@@ -19,7 +19,8 @@ export default {
                 location: '',
                 allow_cancelation: ''
             },
-            locationsData: []
+            locationsData: [],
+            currencySymbol: ""
         };
     },
 
@@ -118,6 +119,7 @@ export default {
     },
     created() {
         this.locationsData = JSON.parse(this.Locations);
+        this.currencySymbol = this.CurrencySymbol;
 
         if (this.edit) {
             let values =  JSON.parse(this.Plan);
@@ -204,7 +206,7 @@ export default {
                                         <div class="form-group">
                                             <label for="plan_price" class=" control-label">{{ trans('plan.plan_price') }}*</label>
                                                 <div class="input-group">
-                                                    <span class="input-group-addon">{{ trans('payment.dollar_sign') }}*</span>
+                                                    <span class="input-group-addon">{{ currencySymbol }}*</span>
                                                     <input v-model="plan.plan_price" required name="plan_price" type="text" id="plan_price" 
                                                     class="form-control input-lg" auto-focus="" 
                                                     :placeholder="trans('plan.plan_price')" >
