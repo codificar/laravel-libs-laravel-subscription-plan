@@ -236,11 +236,11 @@
 import axios from "axios";
 
 export default {
-  props: ["EditPermission", "DeletePermission", "Plans", "CurrencySymbol", "Currency"],
+  props: ["EditPermission", "DeletePermission", "Plans", "Currency"],
   data() {
     return {
       plans: [],
-      currencySymbol: '$',
+      currencySymbol: env.currencySymbol ?? 'R$',
       currency: '',
       qtd: [],
       plan_filter: {
@@ -335,9 +335,6 @@ export default {
   },
   created() {
     this.plans = JSON.parse(this.Plans);
-    if(this.CurrencySymbol) {
-      this.currencySymbol = this.CurrencySymbol;
-    }
     if(this.Currency) {
       this.currency = this.Currency;
     }

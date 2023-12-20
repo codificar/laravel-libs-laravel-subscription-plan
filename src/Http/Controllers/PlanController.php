@@ -50,9 +50,8 @@ class PlanController extends Controller
      */
 	public function add(){
         $locations = Location::allOrderByAlphaUnsetPoligons();
-        $currencySymbol = \Settings::getFormattedCurrency();
         
-        return view('subscriptionPlan::plan.add', ['edit' => false, 'plan' => '', 'locations' => $locations, 'currencySymbol' => $currencySymbol]);	
+        return view('subscriptionPlan::plan.add', ['edit' => false, 'plan' => '', 'locations' => $locations]);	
     }
     
     /**

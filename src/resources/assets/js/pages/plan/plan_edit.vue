@@ -4,7 +4,7 @@ import VuePassword from 'vue-password';
 import { required, minLength, maxLength, email, sameAs } from 'vuelidate/lib/validators';
 
 export default {
-    props: ["redirect", "edit", "crsf_token", "Plan", 'Locations', 'CurrencySymbol'],
+    props: ["redirect", "edit", "crsf_token", "Plan", 'Locations'],
     data() {
         return {
             plan: {
@@ -20,7 +20,7 @@ export default {
                 allow_cancelation: ''
             },
             locationsData: [],
-            currencySymbol: ""
+            currencySymbol: env.currencySymbol ?? 'R$'
         };
     },
 
@@ -119,7 +119,6 @@ export default {
     },
     created() {
         this.locationsData = JSON.parse(this.Locations);
-        this.currencySymbol = this.CurrencySymbol;
 
         if (this.edit) {
             let values =  JSON.parse(this.Plan);

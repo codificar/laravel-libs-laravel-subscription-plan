@@ -1633,8 +1633,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ["redirect", "edit", "crsf_token", "Plan", 'Locations', 'CurrencySymbol'],
+  props: ["redirect", "edit", "crsf_token", "Plan", 'Locations'],
   data: function data() {
+    var _env$currencySymbol;
+
     return {
       plan: {
         //Object plan to be handled by Laravel controller
@@ -1649,7 +1651,7 @@ __webpack_require__.r(__webpack_exports__);
         allow_cancelation: ''
       },
       locationsData: [],
-      currencySymbol: ""
+      currencySymbol: (_env$currencySymbol = env.currencySymbol) !== null && _env$currencySymbol !== void 0 ? _env$currencySymbol : 'R$'
     };
   },
   components: {
@@ -1739,7 +1741,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.locationsData = JSON.parse(this.Locations);
-    this.currencySymbol = this.CurrencySymbol;
 
     if (this.edit) {
       var values = JSON.parse(this.Plan);
@@ -2008,11 +2009,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ["EditPermission", "DeletePermission", "Plans", "CurrencySymbol", "Currency"],
+  props: ["EditPermission", "DeletePermission", "Plans", "Currency"],
   data: function data() {
+    var _env$currencySymbol;
+
     return {
       plans: [],
-      currencySymbol: '$',
+      currencySymbol: (_env$currencySymbol = env.currencySymbol) !== null && _env$currencySymbol !== void 0 ? _env$currencySymbol : 'R$',
       currency: '',
       qtd: [],
       plan_filter: {
@@ -2105,10 +2108,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.plans = JSON.parse(this.Plans);
-
-    if (this.CurrencySymbol) {
-      this.currencySymbol = this.CurrencySymbol;
-    }
 
     if (this.Currency) {
       this.currency = this.Currency;
