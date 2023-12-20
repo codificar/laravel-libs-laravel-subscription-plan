@@ -21,8 +21,7 @@
 		redirect="/admin/plan/list"
 		edit="{{ $edit }}"
 		Plan="{{ $plan }}"
-		locations="{{ $locations }}"
-		currency-symbol="{{ $currencySymbol }}">
+		locations="{{ $locations }}">
 	</plan-edit>
 </div>
 @endsection
