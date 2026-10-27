@@ -9,6 +9,7 @@ use Codificar\LaravelSubscriptionPlan\Models\Signature;
 
 use Provider;
 
+#[\AllowDynamicProperties]
 class SubscriptionDetailsFormRequest extends FormRequest
 {
     /**

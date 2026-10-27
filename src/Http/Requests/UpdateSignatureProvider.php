@@ -9,6 +9,7 @@ use Provider, Payment;
 use Codificar\LaravelSubscriptionPlan\Models\Plan;
 use Carbon\Carbon;
 
+#[\AllowDynamicProperties]
 class UpdateSignatureProvider extends FormRequest
 {
     /**
